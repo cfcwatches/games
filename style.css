@@ -1,16 +1,17 @@
 ﻿@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&display=swap');
 :root{--bg:#f3effb;--panel:#fff;--ink:#241f3d;--mute:#5e5683;--line:#d6cdee;--accent:#6c4cf1;color-scheme:light}
 @media (prefers-color-scheme:dark){:root{--bg:#0f1127;--panel:#191c3a;--ink:#f1eeff;--mute:#a9a3d2;--line:#2f3466;--accent:#a592ff;color-scheme:dark}}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.65 system-ui,-apple-system,Segoe UI,sans-serif}
 header,main,footer{max-width:760px;margin:0 auto;padding:0 18px}
 header{padding-top:20px;display:flex;flex-wrap:wrap;gap:10px 22px;align-items:center;justify-content:space-between}
-.logo{font:800 26px 'Segoe UI','Avenir Next',system-ui,sans-serif;color:var(--ink);text-decoration:none;letter-spacing:-.02em}
+.logo{font:800 26px 'Bricolage Grotesque',system-ui,sans-serif;color:var(--ink);text-decoration:none;letter-spacing:-.02em}
 nav a{color:var(--mute);text-decoration:none;font-weight:600;font-size:15px;margin-right:14px}
 nav a:hover,nav a[aria-current]{color:var(--accent)}
 main{background:var(--panel);border:1px solid var(--line);border-radius:22px;padding:28px 26px;margin-top:20px;margin-bottom:24px}
-h1{font:800 clamp(30px,6vw,42px)/1.1 'Segoe UI','Avenir Next',system-ui,sans-serif;letter-spacing:-.02em;margin:0 0 10px}
-h2{font:800 22px 'Segoe UI','Avenir Next',system-ui,sans-serif;margin:30px 0 4px}
+h1{font:800 clamp(30px,6vw,42px)/1.1 'Bricolage Grotesque',system-ui,sans-serif;letter-spacing:-.02em;margin:0 0 10px}
+h2{font:800 22px 'Bricolage Grotesque',system-ui,sans-serif;margin:30px 0 4px}
 p,li{color:var(--ink)}li{margin:4px 0}
 .lead{color:var(--mute);font-size:19px}
 a{color:var(--accent)}
