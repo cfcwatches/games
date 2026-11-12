@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Free General Knowledge Quiz – Science, History, Sport and Maths – Hue Sudoku</title>
+<meta name="description" content="Free 10-question general knowledge quiz covering science, history, sport, everyday knowledge and maths. Play solo and beat your best score.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;600;800&display=swap" rel="stylesheet">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7925282448688414" crossorigin="anonymous"></script>
+<style>
+:root{--bg:#f3effb;--panel:#fff;--ink:#241f3d;--mute:#5e5683;--line:#d6cdee;--accent:#6c4cf1;--ok:#13a05a;--bad:#e5334f;--dl:44%;color-scheme:light}
+@media (prefers-color-scheme:dark){:root{--bg:#0f1127;--panel:#191c3a;--ink:#f1eeff;--mute:#a9a3d2;--line:#2f3466;--accent:#a592ff;--ok:#3ddc8a;--bad:#ff5d77;--dl:68%;color-scheme:dark}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.6 system-ui,sans-serif;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+.wrap{max-width:640px;margin:0 auto;padding:0 16px}
+header{padding:18px 0 6px;display:flex;flex-wrap:wrap;gap:10px 20px;align-items:center;justify-content:space-between}
+.logo{font:800 26px 'Bricolage Grotesque',system-ui,sans-serif;color:var(--ink);text-decoration:none;letter-spacing:-.02em}
+nav a{color:var(--mute);text-decoration:none;font-weight:600;font-size:15px;margin-right:14px}nav a[aria-current]{color:var(--accent)}
+button{font:inherit;color:inherit;cursor:pointer;touch-action:manipulation}
+button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+h1{font:800 clamp(28px,6vw,38px)/1.1 'Bricolage Grotesque',system-ui,sans-serif;letter-spacing:-.02em;margin:14px 0 4px}
+.sub{color:var(--mute);margin:0 0 12px}
+.seg{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
+.seg button{border:1px solid var(--line);background:var(--panel);border-radius:999px;padding:7px 14px;font-weight:600;font-size:15px;color:var(--mute)}
+.seg button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+.stats{display:flex;justify-content:space-between;align-items:center;margin:14px 2px 8px;font-weight:600;color:var(--mute)}
+.stats b{color:var(--ink);font:800 22px 'Bricolage Grotesque',system-ui,sans-serif;font-variant-numeric:tabular-nums}
+.bar{height:8px;border-radius:99px;background:var(--line);overflow:hidden;margin-bottom:14px}
+.bar i{display:block;height:100%;width:100%;background:hsl(var(--h,268) 78% 58%);transition:width .1s linear}
+.card{--h:268;position:relative;background:var(--panel);border:1px solid var(--line);border-top:6px solid hsl(var(--h) 78% 58%);border-radius:22px;padding:22px 16px 18px;box-shadow:0 18px 50px -24px rgba(80,60,200,.5);min-height:380px}
+.cat{display:inline-block;font-weight:800;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:hsl(var(--h) 78% var(--dl));margin-bottom:6px}
+.q{font:800 clamp(22px,5.4vw,28px)/1.25 'Bricolage Grotesque',system-ui,sans-serif;margin:0 0 16px}
+.opts{display:grid;gap:10px}
+.opt{display:flex;align-items:center;gap:12px;text-align:left;background:var(--bg);border:2px solid var(--line);border-radius:14px;padding:12px 14px;font-weight:600;font-size:17px}
+.opt i{flex:none;width:28px;height:28px;border-radius:9px;background:hsl(var(--h) 80% 55% / .2);color:hsl(var(--h) 78% var(--dl));display:flex;align-items:center;justify-content:center;font:800 15px system-ui;font-style:normal}
+.opt:hover:not([disabled]){border-color:hsl(var(--h) 78% 58%)}
+.opt.ok{background:color-mix(in srgb,var(--ok) 20%,var(--panel));border-color:var(--ok)}
+.opt.no{background:color-mix(in srgb,var(--bad) 18%,var(--panel));border-color:var(--bad)}
+.opt[disabled]{cursor:default}
+.next{display:none;margin:14px auto 0;background:var(--accent);color:#fff;border:0;border-radius:14px;padding:11px 26px;font-weight:800}
+.next.on{display:block}
+.cover{position:absolute;inset:0;border-radius:inherit;background:var(--panel);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:18px;text-align:center}
+.cover[hidden]{display:none}
+.cover h2{font:800 30px 'Bricolage Grotesque',system-ui,sans-serif;margin:0}
+.cover p{margin:0;color:var(--mute)}
+.big{font:800 60px 'Bricolage Grotesque',system-ui,sans-serif;color:var(--accent);line-height:1}
+.btn{background:var(--accent);color:#fff;border:0;border-radius:14px;padding:12px 26px;font-weight:800;font-size:17px}
+.ghost{background:none;border:1px solid var(--line);color:var(--mute);border-radius:12px;padding:9px 16px;font-weight:600}
+.adwrap{text-align:center}.adtop{max-width:728px;margin:6px auto;min-height:50px}.adfoot{max-width:728px;margin:48px auto 20px;min-height:50px}
+article{background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:6px 22px 18px;margin:34px 0 10px}
+article h2{font:800 21px 'Bricolage Grotesque',system-ui,sans-serif;margin:20px 0 4px}
+footer{text-align:center;color:var(--mute);font-size:14px;padding:6px 0 28px}footer a{color:var(--accent);font-weight:600;text-decoration:none;margin:0 8px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style></head><body><div class="wrap">
+<header><a class="logo" href="index.html">Hue Sudoku</a><nav><a href="games.html">All games</a><a href="index.html">Sudoku</a><a href="maths-sprint.html">Maths Sprint</a><a href="quiz.html" aria-current="page">Quiz</a></nav></header>
+<div class="adwrap adtop"><ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-7925282448688414" data-ad-slot="8192459900" data-ad-format="horizontal" data-full-width-responsive="true"></ins></div>
+<h1>General Knowledge Quiz</h1>
+<p class="sub">Ten questions, fifteen seconds each. How many can you get right?</p>
+<div class="seg" id="cats" aria-label="Category"></div>
+<div class="stats"><span>Question <b id="qn">0</b>/10</span><span>Score <b id="score">0</b></span><span>Streak <b id="streak">0</b></span></div>
+<div class="bar"><i id="bar"></i></div>
+<div class="card" id="card">
+<span class="cat" id="cat">&nbsp;</span>
+<h2 class="q" id="q">&nbsp;</h2>
+<div class="opts" id="opts"></div>
+<button class="next" id="next">Next question</button>
+<div class="cover" id="start"><h2>Ready to play?</h2><p id="best">&nbsp;</p><button class="btn" id="go">Start quiz</button></div>
+<div class="cover" id="end" hidden><h2 id="et">Well done!</h2><div class="big" id="es">0/10</div><p id="ed"></p><p id="eb"></p><div><button class="btn" id="again">Play again</button> <button class="ghost" id="share">Share score</button></div><p id="sm"></p></div>
+</div>
+<article>
+<h2>About the quiz</h2>
+<p>Each round has ten questions drawn at random from five categories: science, history, sport, everyday knowledge and maths. Choose one category to focus on, or leave it on Mixed. You score 10 points for each correct answer, and the timer ends the question after fifteen seconds. Press 1 to 4 on a keyboard to answer quickly.</p>
+<p>We check our questions carefully, but mistakes can slip through. If you spot a wrong answer, please <a href="about.html">get in touch</a>. Fancy a different challenge? Try <a href="maths-sprint.html">Maths Sprint</a> or a <a href="index.html">Sudoku puzzle</a>.</p>
+</article>
+<div class="adwrap adfoot"><ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-7925282448688414" data-ad-slot="5056140614" data-ad-format="auto" data-full-width-responsive="true"></ins></div>
+<footer><a href="games.html">All games</a><a href="index.html">Sudoku</a><a href="maths-sprint.html">Maths Sprint</a><a href="about.html">About</a><a href="privacy.html">Privacy policy</a><br>© 2026 Hue Sudoku. All rights reserved.</footer>
+</div>
+<script>
+/* [category, question, correct answer, wrong, wrong, wrong] */
+const BANK=[
+['S','Which gas do plants absorb from the air for photosynthesis?','Carbon dioxide','Oxygen','Nitrogen','Hydrogen'],
+['S','What is the chemical symbol for gold?','Au','Ag','Gd','Go'],
+['S','How many planets are in our solar system?','8','7','9','10'],
+['S','What is the hardest naturally occurring substance?','Diamond','Quartz','Granite','Iron'],
+['S','Which planet is known as the Red Planet?','Mars','Venus','Mercury','Jupiter'],
+['S','At sea level, at what temperature in °C does water boil?','100','90','110','212'],
+['S','Which organ pumps blood around the body?','The heart','The liver','The lungs','The kidney'],
+['S','Which is the largest planet in our solar system?','Jupiter','Saturn','Neptune','Earth'],
+['S','How many bones are in an adult human body?','206','186','226','256'],
+['S','Which is the nearest star to Earth?','The Sun','Proxima Centauri','Sirius','Polaris'],
+['S','Which blood cells carry oxygen around the body?','Red blood cells','White blood cells','Platelets','Plasma'],
+['S','Through which of these does sound normally travel fastest?','A steel bar','Water','Air','A vacuum'],
+['S','Which part of a cell is known as its powerhouse?','Mitochondria','Nucleus','Ribosome','Cell wall'],
+['S','Which gas makes up most of Earth’s atmosphere?','Nitrogen','Oxygen','Carbon dioxide','Argon'],
+['S','What force pulls objects towards the Earth?','Gravity','Magnetism','Friction','Static'],
+['S','What do we call an animal that eats only plants?','Herbivore','Carnivore','Omnivore','Insectivore'],
+['H','In which year did the Titanic sink?','1912','1905','1918','1921'],
+['H','Who was the first person to walk on the Moon?','Neil Armstrong','Buzz Aldrin','Yuri Gagarin','John Glenn'],
+['H','Which ancient civilisation built the pyramids at Giza?','The Egyptians','The Romans','The Greeks','The Aztecs'],
+['H','In which year did the Second World War end?','1945','1939','1918','1950'],
+['H','Who painted the Mona Lisa?','Leonardo da Vinci','Michelangelo','Raphael','Botticelli'],
+['H','In which year did the Berlin Wall fall?','1989','1979','1991','1985'],
+['H','Which queen reigned over Britain for 63 years until 1901?','Victoria','Elizabeth I','Anne','Mary I'],
+['H','Who was the first President of the United States?','George Washington','Abraham Lincoln','Thomas Jefferson','John Adams'],
+['H','In which year was the Great Fire of London?','1666','1606','1688','1766'],
+['H','In which year was the Battle of Hastings?','1066','1166','1006','1215'],
+['H','Which country gave the Statue of Liberty to the USA?','France','England','Spain','Italy'],
+['H','Who was British Prime Minister for most of the Second World War?','Winston Churchill','Neville Chamberlain','Clement Attlee','Anthony Eden'],
+['H','Which explorer reached the Americas in 1492?','Christopher Columbus','Marco Polo','Vasco da Gama','Ferdinand Magellan'],
+['H','In which year was the Magna Carta sealed?','1215','1066','1415','1688'],
+['H','Which wall did the Romans build across northern England?','Hadrian’s Wall','Offa’s Dyke','Antonine Wall','Berlin Wall'],
+['H','Which ship carried the Pilgrims to America in 1620?','The Mayflower','The Santa Maria','The Endeavour','The Victory'],
+['P','How many players does one football team have on the pitch?','11','9','10','12'],
+['P','In tennis, what is a score of zero called?','Love','Nil','Zero','Duck'],
+['P','How many rings are on the Olympic flag?','5','4','6','7'],
+['P','In golf, what is a score of one under par on a hole called?','A birdie','An eagle','A bogey','An albatross'],
+['P','In which city is the Wimbledon tennis tournament held?','London','Manchester','Paris','New York'],
+['P','How many points is a try worth in rugby union?','5','3','7','2'],
+['P','What is the highest possible break in snooker without a free ball?','147','155','140','180'],
+['P','In which sport might you score a slam dunk?','Basketball','Volleyball','Netball','Handball'],
+['P','How many players from one team are on court in basketball?','5','6','7','4'],
+['P','Which sport uses a shuttlecock?','Badminton','Squash','Tennis','Table tennis'],
+['P','Roughly how long is a marathon?','42.2 km','40 km','21.1 km','50 km'],
+['P','What colour jersey does the Tour de France race leader wear?','Yellow','Green','Red','Blue'],
+['P','What is the highest score with three darts?','180','170','201','160'],
+['P','How many holes are played in a standard round of golf?','18','9','12','24'],
+['P','Which country has won the most men’s football World Cups?','Brazil','Germany','Italy','Argentina'],
+['P','How many balls are bowled in one over of cricket?','6','5','8','10'],
+['G','What is the capital city of Australia?','Canberra','Sydney','Melbourne','Perth'],
+['G','How many days are in a leap year?','366','365','364','367'],
+['G','Which is the largest ocean on Earth?','The Pacific','The Atlantic','The Indian','The Arctic'],
+['G','How many continents are there?','7','5','6','8'],
+['G','Which is the longest river in the UK?','The Severn','The Thames','The Trent','The Tay'],
+['G','Which colour do you get by mixing blue and yellow?','Green','Purple','Orange','Brown'],
+['G','How many minutes are in a day?','1,440','1,240','1,640','2,400'],
+['G','Which is the tallest land animal?','Giraffe','Elephant','Ostrich','Camel'],
+['G','What is the currency of Japan?','Yen','Won','Yuan','Rupee'],
+['G','Which is the highest mountain above sea level?','Mount Everest','K2','Kilimanjaro','Mont Blanc'],
+['G','How many sides does a hexagon have?','6','5','8','7'],
+['G','What do bees produce?','Honey','Milk','Silk','Amber'],
+['G','Which is the smallest country in the world?','Vatican City','Monaco','San Marino','Malta'],
+['G','Which month has the fewest days?','February','April','June','November'],
+['G','In which continent is the Sahara Desert?','Africa','Asia','Australia','South America'],
+['G','What is the main language spoken in Brazil?','Portuguese','Spanish','English','French'],
+['M','What is 15% of 200?','30','15','20','25'],
+['M','What is 7 × 8?','56','54','49','63'],
+['M','How many degrees are in a right angle?','90','45','180','60'],
+['M','What is the next prime number after 7?','11','9','13','8'],
+['M','What is 144 ÷ 12?','12','14','11','13'],
+['M','A £40 shirt has 25% off. What is the sale price?','£30','£35','£10','£25'],
+['M','What is the square root of 81?','9','8','7','11'],
+['M','How many sides does an octagon have?','8','6','10','12'],
+['M','What is one quarter as a percentage?','25%','14%','40%','4%'],
+['M','What is 3 squared plus 4 squared?','25','49','14','12'],
+['M','You buy 3 items at £4.50 each. What is the total?','£13.50','£12.50','£14.50','£13.00'],
+['M','How many seconds are in an hour?','3,600','600','6,000','360'],
+['M','Which fraction is the same as 0.5?','1/2','1/5','1/4','2/5'],
+['M','What do the angles inside a triangle add up to?','180°','90°','270°','360°'],
+['M','What is 12 × 12?','144','124','122','148'],
+['M','What is 20% of 50?','10','5','20','25'],
+['S','What is the chemical formula for table salt?','NaCl','KCl','NaOH','CaCO3'],
+['S','Which planet is famous for its bright rings?','Saturn','Mars','Mercury','Venus'],
+['S','What is it called when liquid water turns into vapour?','Evaporation','Condensation','Freezing','Melting'],
+['S','How many chambers does the human heart have?','4','2','3','5'],
+['S','Which vitamin does our skin make from sunlight?','Vitamin D','Vitamin C','Vitamin A','Vitamin B12'],
+['S','Roughly how fast does light travel?','300,000 km per second','30,000 km per second','3,000 km per second','3 million km per second'],
+['S','Which planet is closest to the Sun?','Mercury','Venus','Earth','Mars'],
+['S','What type of animal is a dolphin?','A mammal','A fish','A reptile','An amphibian'],
+['S','Which gas is the Sun mostly made of?','Hydrogen','Oxygen','Helium','Carbon'],
+['S','What is the scientific study of weather called?','Meteorology','Geology','Biology','Astronomy'],
+['S','Which metal is liquid at room temperature?','Mercury','Lead','Iron','Tin'],
+['S','How many legs does a spider have?','8','6','10','4'],
+['S','What is the largest organ of the human body?','The skin','The liver','The brain','The heart'],
+['S','Which scientist developed the theory of general relativity?','Albert Einstein','Isaac Newton','Galileo Galilei','Niels Bohr'],
+['S','What is the chemical symbol for sodium?','Na','So','S','Sd'],
+['S','Which part of a plant absorbs water from the soil?','The roots','The leaves','The petals','The stem'],
+['H','Which civilisation built Machu Picchu?','The Inca','The Maya','The Aztecs','The Olmecs'],
+['H','Who was the first woman to fly solo across the Atlantic?','Amelia Earhart','Amy Johnson','Bessie Coleman','Harriet Quimby'],
+['H','In which year did the First World War begin?','1914','1912','1916','1918'],
+['H','Which English king had six wives?','Henry VIII','Henry VII','Edward VI','Charles II'],
+['H','Who led the Soviet Union during the Second World War?','Joseph Stalin','Vladimir Lenin','Nikita Khrushchev','Leon Trotsky'],
+['H','Which ancient Roman city was buried by Mount Vesuvius in AD 79?','Pompeii','Athens','Carthage','Troy'],
+['H','Who was the first Roman emperor?','Augustus','Julius Caesar','Nero','Caligula'],
+['H','Which battle ended Napoleon’s rule in 1815?','Waterloo','Trafalgar','Austerlitz','Borodino'],
+['H','Who is said to have nailed the 95 Theses to a church door in 1517?','Martin Luther','John Calvin','Thomas More','Erasmus'],
+['H','Which ship did Captain Cook command on his first voyage of discovery?','HMS Endeavour','HMS Victory','HMS Beagle','The Golden Hind'],
+['H','In which year was the Wall Street Crash?','1929','1919','1939','1925'],
+['H','Whose tomb did Howard Carter discover in 1922?','Tutankhamun','Ramesses II','Khufu','Cleopatra'],
+['H','Which country did Joan of Arc help to defend?','France','England','Spain','Italy'],
+['H','In which year was the Gunpowder Plot?','1605','1588','1666','1415'],
+['H','Whose coronation was the first to be televised, in 1953?','Elizabeth II','George VI','Edward VIII','Victoria'],
+['H','In which year did Britain join the European Economic Community?','1973','1963','1983','1957'],
+['P','How many players are on the pitch for one rugby union team?','15','13','11','12'],
+['P','In which sport is the Ryder Cup contested?','Golf','Tennis','Cricket','Rowing'],
+['P','In which sport would you find a scrum?','Rugby','Football','Hockey','Netball'],
+['P','How many Grand Slam tennis tournaments are played each year?','4','3','5','6'],
+['P','In which country did the modern Olympic Games begin in 1896?','Greece','France','England','The USA'],
+['P','How long is an Olympic-size swimming pool?','50 metres','25 metres','100 metres','33 metres'],
+['P','In ten-pin bowling, what is knocking down all pins with the first ball called?','A strike','A spare','A split','A gutter'],
+['P','How many points is a touchdown worth in American football?','6','7','3','5'],
+['P','In which sport is the Stanley Cup awarded?','Ice hockey','Basketball','Baseball','Football'],
+['P','How many minutes is a standard football match, not counting added time?','90','80','100','120'],
+['P','Which sport is played with a puck?','Ice hockey','Lacrosse','Cricket','Golf'],
+['P','In which sport would you use a pommel horse?','Gymnastics','Equestrian','Athletics','Rodeo'],
+['P','Who holds the men’s 100 m world record of 9.58 seconds?','Usain Bolt','Carl Lewis','Justin Gatlin','Yohan Blake'],
+['P','How many players from one team are on court in netball?','7','5','9','6'],
+['P','Which country is famous for sumo wrestling?','Japan','China','Korea','Thailand'],
+['P','In golf, what is a score of two under par on a hole usually called?','An eagle','A birdie','An albatross','A bogey'],
+['G','What is the capital city of Canada?','Ottawa','Toronto','Vancouver','Montreal'],
+['G','Which is the largest country in the world by area?','Russia','Canada','China','The USA'],
+['G','How many strings does a standard guitar have?','6','4','5','8'],
+['G','Which animal is nicknamed the ship of the desert?','The camel','The horse','The ostrich','The donkey'],
+['G','What is the capital city of Italy?','Rome','Milan','Venice','Naples'],
+['G','Which river flows through London?','The Thames','The Severn','The Mersey','The Tyne'],
+['G','Which country is home to the kangaroo?','Australia','New Zealand','South Africa','Brazil'],
+['G','How many keys are on a standard piano?','88','76','92','64'],
+['G','In which country is the Eiffel Tower?','France','Belgium','Italy','Spain'],
+['G','Which country is known as the Land of the Rising Sun?','Japan','China','Thailand','Korea'],
+['G','How many pieces does each player start with in chess?','16','12','20','8'],
+['G','What is the currency of the United Kingdom?','Pound sterling','Euro','Dollar','Franc'],
+['G','Which instrument has black and white keys?','Piano','Violin','Flute','Drum'],
+['G','How many hours are in a week?','168','148','144','188'],
+['G','Which is the smallest continent by land area?','Australia (Oceania)','Europe','Antarctica','South America'],
+['G','In which city would you find the Colosseum?','Rome','Athens','Cairo','Istanbul'],
+['M','What is 9 × 6?','54','56','63','48'],
+['M','What is half of 250?','125','120','150','105'],
+['M','How many degrees are in a full circle?','360','180','270','90'],
+['M','What is 1,000 ÷ 8?','125','120','150','80'],
+['M','What is 10% of £85?','£8.50','£0.85','£17.00','£9.50'],
+['M','Which of these is a prime number?','13','15','21','27'],
+['M','What is 2 to the power of 5?','32','25','10','16'],
+['M','What is 0.25 as a fraction?','1/4','1/2','1/8','2/5'],
+['M','What is the perimeter of a square with 6 cm sides?','24 cm','36 cm','12 cm','18 cm'],
+['M','What is the area of a rectangle 5 m by 4 m?','20 m²','18 m²','9 m²','40 m²'],
+['M','What is 25 × 4?','100','90','125','110'],
+['M','What is 3/4 as a percentage?','75%','34%','60%','80%'],
+['M','Three friends split a £45 bill equally. How much does each pay?','£15','£12','£18','£14'],
+['M','What is 100 − 37?','63','67','73','57'],
+['M','How many millimetres are in a metre?','1,000','100','10,000','10'],
+['M','What comes next: 2, 4, 8, 16, …?','32','24','30','20']
+];
+</script>
+<script>
+(function(){
+var $=function(s){return document.querySelector(s)};
+var CATS=[['X','Mixed'],['S','Science'],['H','History'],['P','Sport'],['G','General'],['M','Maths']];
+var NAME={S:'Science',H:'History',P:'Sport',G:'General knowledge',M:'Maths'};
+var HUE={S:172,H:24,P:140,G:200,M:312};
+var cat='X',round=[],i=0,score=0,streak=0,right=0,locked=true,end=0,tick=null,cur=null;
+function shuffle(a){for(var k=a.length-1;k>0;k--){var j=Math.floor(Math.random()*(k+1)),t=a[k];a[k]=a[j];a[j]=t}return a}
+function store(k,v){try{if(v===undefined)return JSON.parse(localStorage.getItem(k)||'null');localStorage.setItem(k,JSON.stringify(v))}catch(e){return null}}
+var segEl=$('#cats');
+CATS.forEach(function(c){var b=document.createElement('button');b.type='button';b.textContent=c[1];b.setAttribute('aria-pressed',c[0]===cat);
+  b.onclick=function(){if(!$('#start').hidden||!$('#end').hidden){cat=c[0];[].forEach.call(segEl.children,function(x){x.setAttribute('aria-pressed',x===b)});showBest()}};segEl.appendChild(b)});
+function showBest(){var b=(store('hue-quiz-best')||{})[cat];$('#best').textContent=b!=null?'Your best here: '+b+'/10':'Ten questions. Fifteen seconds each.'}
+function pick(){
+  var pool=[];BANK.forEach(function(q,n){if(cat==='X'||q[0]===cat)pool.push(n)});
+  var seen=store('hue-quiz-seen')||[];var fresh=pool.filter(function(n){return seen.indexOf(n)<0});
+  if(fresh.length<10){seen=seen.filter(function(n){return pool.indexOf(n)<0});fresh=pool.slice()}
+  shuffle(fresh);var chosen=fresh.slice(0,10);store('hue-quiz-seen',seen.concat(chosen).slice(-120));
+  return chosen}
+function start(){
+  round=pick();i=0;score=0;streak=0;right=0;
+  $('#start').hidden=true;$('#end').hidden=true;$('#score').textContent=0;$('#streak').textContent=0;ask()}
+function ask(){
+  var q=BANK[round[i]];cur={a:q[2],opts:shuffle(q.slice(2))};locked=false;
+  $('#qn').textContent=i+1;$('#cat').textContent=NAME[q[0]];$('#q').textContent=q[1];$('#card').style.setProperty('--h',HUE[q[0]]);$('#bar').style.setProperty('--h',HUE[q[0]]);
+  var o=$('#opts');o.innerHTML='';
+  cur.opts.forEach(function(t,n){var b=document.createElement('button');b.type='button';b.className='opt';b.innerHTML='<i>'+(n+1)+'</i><span></span>';b.lastChild.textContent=t;b.onclick=function(){answer(n)};o.appendChild(b)});
+  $('#next').classList.remove('on');
+  clearInterval(tick);end=performance.now()+15000;
+  tick=setInterval(function(){var left=Math.max(0,end-performance.now());$('#bar').style.width=(left/150)+'%';if(left<=0){answer(-1)}},100)}
+function answer(n){
+  if(locked)return;locked=true;clearInterval(tick);
+  var good=n>=0&&cur.opts[n]===cur.a;
+  [].forEach.call($('#opts').children,function(b,k){b.disabled=true;if(cur.opts[k]===cur.a)b.classList.add('ok');else if(k===n)b.classList.add('no')});
+  if(good){right++;streak++;score+=10}else streak=0;
+  $('#score').textContent=score;$('#streak').textContent=streak;
+  $('#next').textContent=i===9?'See my score':'Next question';$('#next').classList.add('on');$('#next').focus()}
+function nextQ(){if(!locked)return;if(i===9)finish();else{i++;ask()}}
+function finish(){
+  var all=store('hue-quiz-best')||{},prev=all[cat],msg;
+  if(prev==null||right>prev){all[cat]=right;store('hue-quiz-best',all);msg=prev==null?'First score saved!':'New personal best!'}else msg='Your best here is '+prev+'/10.';
+  $('#es').textContent=right+'/10';
+  $('#et').textContent=right===10?'Perfect!':right>=8?'Brilliant!':right>=5?'Well done!':'Good effort!';
+  $('#ed').textContent=score+' points · '+(cat==='X'?'Mixed':NAME[cat])+' quiz';$('#eb').textContent=msg;$('#sm').textContent='';
+  $('#end').hidden=false;showBest()}
+$('#go').onclick=start;$('#again').onclick=start;$('#next').onclick=nextQ;
+$('#share').onclick=function(){
+  var t='I scored '+right+'/10 on the Hue Sudoku General Knowledge Quiz. Can you beat me? https://huesudoku.com/quiz.html';
+  if(navigator.share){navigator.share({text:t}).catch(function(){})}
+  else if(navigator.clipboard){navigator.clipboard.writeText(t).then(function(){$('#sm').textContent='Copied to clipboard!'},function(){$('#sm').textContent=t})}
+  else $('#sm').textContent=t};
+document.addEventListener('keydown',function(e){
+  if(e.key>='1'&&e.key<='4'&&!locked&&cur){var n=+e.key-1;if(n<cur.opts.length)answer(n)}
+  else if(e.key==='Enter'&&locked&&$('#next').classList.contains('on'))nextQ()});
+showBest();
+document.querySelectorAll('ins.adsbygoogle').forEach(function(el){if(el.offsetParent===null)return;try{(window.adsbygoogle=window.adsbygoogle||[]).push({})}catch(e){}});
+})();
+</script></body></html>
