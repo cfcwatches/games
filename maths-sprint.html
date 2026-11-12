@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Maths Sprint – free 60-second mental maths game – Hue Sudoku</title>
+<meta name="description" content="Free 60-second mental maths game. Practise addition, subtraction, times tables, division and percentages at three difficulty levels.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;600;800&display=swap" rel="stylesheet">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7925282448688414" crossorigin="anonymous"></script>
+<style>
+:root{--bg:#f3effb;--panel:#fff;--ink:#241f3d;--mute:#5e5683;--line:#d6cdee;--accent:#6c4cf1;--ok:#13a05a;--bad:#e5334f;--dl:44%;color-scheme:light}
+@media (prefers-color-scheme:dark){:root{--bg:#0f1127;--panel:#191c3a;--ink:#f1eeff;--mute:#a9a3d2;--line:#2f3466;--accent:#a592ff;--ok:#3ddc8a;--bad:#ff5d77;--dl:68%;color-scheme:dark}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.6 system-ui,sans-serif;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+.wrap{max-width:640px;margin:0 auto;padding:0 16px}
+header{padding:18px 0 6px;display:flex;flex-wrap:wrap;gap:10px 20px;align-items:center;justify-content:space-between}
+.logo{font:800 26px 'Bricolage Grotesque',system-ui,sans-serif;color:var(--ink);text-decoration:none;letter-spacing:-.02em}
+nav a{color:var(--mute);text-decoration:none;font-weight:600;font-size:15px;margin-right:14px}nav a[aria-current]{color:var(--accent)}
+button{font:inherit;color:inherit;cursor:pointer;touch-action:manipulation}
+button:focus-visible,input:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+h1{font:800 clamp(28px,6vw,38px)/1.1 'Bricolage Grotesque',system-ui,sans-serif;letter-spacing:-.02em;margin:14px 0 4px}
+.sub{color:var(--mute);margin:0 0 14px}
+.seg{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
+.seg button{border:1px solid var(--line);background:var(--panel);border-radius:999px;padding:7px 14px;font-weight:600;font-size:15px;color:var(--mute)}
+.seg button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:14px 0 8px}
+.stat{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:8px 10px;text-align:center;font-size:13px;color:var(--mute);font-weight:600}
+.stat b{display:block;font:800 24px 'Bricolage Grotesque',system-ui,sans-serif;color:var(--ink);font-variant-numeric:tabular-nums}
+.bar{height:8px;border-radius:99px;background:var(--line);overflow:hidden;margin-bottom:14px}
+.bar i{display:block;height:100%;width:100%;background:var(--accent);transition:width .1s linear}
+.card{--h:268;position:relative;background:var(--panel);border:1px solid var(--line);border-top:6px solid hsl(var(--h) 78% 58%);border-radius:22px;padding:28px 18px 22px;text-align:center;box-shadow:0 18px 50px -24px rgba(80,60,200,.5)}
+.card.ok{animation:ok .25s}.card.no{animation:no .3s}
+@keyframes ok{50%{background:color-mix(in srgb,var(--ok) 18%,var(--panel))}}
+@keyframes no{25%{transform:translateX(-7px);background:color-mix(in srgb,var(--bad) 18%,var(--panel))}60%{transform:translateX(7px)}}
+.q{font:800 clamp(40px,12vw,64px)/1.1 'Bricolage Grotesque',system-ui,sans-serif;color:hsl(var(--h) 78% var(--dl));min-height:1.2em;font-variant-numeric:tabular-nums}
+.ans{display:block;margin:14px auto 0;width:min(240px,80%);font:800 38px 'Bricolage Grotesque',system-ui,sans-serif;text-align:center;border:3px solid var(--line);border-radius:16px;padding:6px;background:var(--bg);color:var(--ink)}
+.msg{min-height:1.6em;margin-top:10px;font-weight:600;color:var(--mute)}
+.row{display:flex;gap:8px;justify-content:center;margin-top:6px}
+.btn{background:var(--accent);color:#fff;border:0;border-radius:14px;padding:12px 26px;font-weight:800;font-size:17px}
+.ghost{background:none;border:1px solid var(--line);color:var(--mute);border-radius:12px;padding:8px 14px;font-weight:600}
+.cover{position:absolute;inset:0;border-radius:inherit;background:color-mix(in srgb,var(--panel) 94%,transparent);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:16px}
+.cover[hidden]{display:none}
+.cover h2{font:800 30px 'Bricolage Grotesque',system-ui,sans-serif;margin:0}
+.big{font:800 54px 'Bricolage Grotesque',system-ui,sans-serif;color:var(--accent)}
+.cover p{margin:0;color:var(--mute)}
+.adwrap{text-align:center}.adtop{max-width:728px;margin:6px auto;min-height:50px}.adfoot{max-width:728px;margin:48px auto 20px;min-height:50px}
+article{background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:6px 22px 18px;margin:34px 0 10px}
+article h2{font:800 21px 'Bricolage Grotesque',system-ui,sans-serif;margin:20px 0 4px}article p,article li{color:var(--ink)}
+footer{text-align:center;color:var(--mute);font-size:14px;padding:6px 0 28px}footer a{color:var(--accent);font-weight:600;text-decoration:none;margin:0 8px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style></head><body><div class="wrap">
+<header><a class="logo" href="index.html">Hue Sudoku</a><nav><a href="index.html">Sudoku</a><a href="maths-sprint.html" aria-current="page">Maths Sprint</a></nav></header>
+<div class="adwrap adtop"><ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-7925282448688414" data-ad-slot="8192459900" data-ad-format="horizontal" data-full-width-responsive="true"></ins></div>
+<h1>Maths Sprint</h1>
+<p class="sub">How many can you solve in 60 seconds? Type the answer and it checks itself.</p>
+<div class="seg" id="mode" aria-label="Question type"></div>
+<div class="seg" id="diff" aria-label="Difficulty"></div>
+<div class="stats"><div class="stat">Score<b id="score">0</b></div><div class="stat">Streak<b id="streak">0</b></div><div class="stat">Time left<b id="time">60</b></div></div>
+<div class="bar"><i id="bar"></i></div>
+<div class="card" id="card">
+<div class="q" id="q">Ready?</div>
+<input class="ans" id="ans" type="text" inputmode="numeric" pattern="[0-9]*" autocomplete="off" aria-label="Your answer" disabled>
+<div class="msg" id="msg"></div>
+<div class="row"><button class="ghost" id="skip" disabled>Skip</button></div>
+<div class="cover" id="start"><h2>Maths Sprint</h2><p id="best">&nbsp;</p><button class="btn" id="go">Start</button></div>
+<div class="cover" id="end" hidden><h2>Time’s up!</h2><div class="big" id="fs">0</div><p id="fd"></p><p id="fb"></p><button class="btn" id="again">Play again</button></div>
+</div>
+<article>
+<h2>How it works</h2>
+<p>Pick a type of question and a difficulty, then press Start. You have 60 seconds. Each correct answer scores 10 points, and every answer in a row adds a streak bonus. A wrong answer or a skip resets your streak, but it never costs points.</p>
+<h2>Four mental maths shortcuts</h2>
+<ul><li><b>Percentages:</b> find 10% by moving the decimal point. Half of that is 5%, and 15% is 10% plus 5%.</li><li><b>Times 9:</b> multiply by 10 and subtract the number. For 9 × 7, do 70 − 7 = 63.</li><li><b>Times 11:</b> for a two-digit number, add its digits and put the total in the middle. 23 × 11 = 253.</li><li><b>Squaring a number ending in 5:</b> multiply the first digit by the next digit up, then write 25. For 35², do 3 × 4 = 12, so 1225.</li></ul>
+<p>Practising for a few minutes a day builds speed. <a href="index.html">Take a break with a Sudoku puzzle</a> when you are ready.</p>
+</article>
+<div class="adwrap adfoot"><ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-7925282448688414" data-ad-slot="5056140614" data-ad-format="auto" data-full-width-responsive="true"></ins></div>
+<footer><a href="index.html">Sudoku</a><a href="how-to-play.html">How to play Sudoku</a><a href="about.html">About</a><a href="privacy.html">Privacy policy</a><br>© 2026 Hue Sudoku. All rights reserved.</footer>
+</div>
+<script>
+(function(){
+var $=function(s){return document.querySelector(s)};
+var R=function(a,b){return a+Math.floor(Math.random()*(b-a+1))};
+var P=function(a){return a[Math.floor(Math.random()*a.length)]};
+var MODES=[['mixed','Mixed'],['add','Add'],['sub','Subtract'],['mul','Times'],['div','Divide'],['pct','Percent']];
+var DIFFS=[['easy','Easy'],['medium','Medium'],['hard','Hard']];
+var HUE={add:140,sub:200,mul:24,div:268,pct:312};
+var mode='mixed',diff='easy',run=false,end=0,score=0,streak=0,bs=0,ok=0,tot=0,cur=null,tick=null;
+function bestAll(){try{return JSON.parse(localStorage.getItem('hue-maths-best')||'{}')}catch(e){return{}}}
+function saveBest(o){try{localStorage.setItem('hue-maths-best',JSON.stringify(o))}catch(e){}}
+function seg(id,list,get,set){var el=$(id);el.innerHTML='';list.forEach(function(x){var b=document.createElement('button');b.type='button';b.textContent=x[1];b.setAttribute('aria-pressed',get()===x[0]);b.onclick=function(){if(run)return;set(x[0]);[].forEach.call(el.children,function(c){c.setAttribute('aria-pressed',c===b)});showBest()};el.appendChild(b)})}
+seg('#mode',MODES,function(){return mode},function(v){mode=v});
+seg('#diff',DIFFS,function(){return diff},function(v){diff=v});
+function showBest(){var b=bestAll()[mode+'-'+diff];$('#best').textContent=b!=null?'Your best: '+b:'No score yet. Set one!'}
+function make(){
+  var m=mode==='mixed'?P(['add','sub','mul','div','pct']):mode,d=diff,a,b,t,ans;
+  if(m==='add'){var r=d==='easy'?[2,20]:d==='medium'?[10,99]:[100,999];a=R(r[0],r[1]);b=R(r[0],r[1]);t=a+' + '+b;ans=a+b}
+  else if(m==='sub'){var r2=d==='easy'?[2,20]:d==='medium'?[10,99]:[100,999];a=R(r2[0],r2[1]);b=R(r2[0],r2[1]);if(b>a){var x=a;a=b;b=x}t=a+' − '+b;ans=a-b}
+  else if(m==='mul'){a=d==='easy'?R(2,9):d==='medium'?R(3,12):R(12,30);b=d==='easy'?R(2,9):d==='medium'?R(11,25):R(6,19);t=a+' × '+b;ans=a*b}
+  else if(m==='div'){b=d==='easy'?R(2,9):d==='medium'?R(3,12):R(6,19);ans=d==='easy'?R(2,9):d==='medium'?R(5,20):R(6,25);a=b*ans;t=a+' ÷ '+b}
+  else{var p=d==='easy'?P([10,20,25,50]):d==='medium'?P([5,10,15,20,25,30,40,50,60,75]):P([5,15,35,45,55,65,85,95,12*5]);var n=20*(d==='easy'?R(1,10):d==='medium'?R(2,20):R(5,50));t=p+'% of '+n;ans=p*n/100}
+  return{t:t,a:ans,m:m}}
+function next(){cur=make();$('#q').textContent=cur.t;$('#card').style.setProperty('--h',HUE[cur.m]);$('#ans').value='';$('#ans').focus()}
+function flash(c){var k=$('#card');k.classList.remove('ok','no');void k.offsetWidth;k.classList.add(c)}
+function judge(good){
+  tot++;
+  if(good){ok++;streak++;if(streak>bs)bs=streak;score+=10+Math.min(streak-1,10)*2;flash('ok');$('#msg').textContent=''}
+  else{streak=0;flash('no');$('#msg').textContent='Answer: '+cur.a}
+  $('#score').textContent=score;$('#streak').textContent=streak;next()}
+function check(force){
+  if(!run)return;var v=$('#ans').value.trim(),s=String(cur.a);
+  if(v===''){return}
+  if(v===s)judge(true);else if(force||v.length>=s.length)judge(false)}
+function start(){
+  score=0;streak=0;bs=0;ok=0;tot=0;run=true;end=performance.now()+60000;
+  $('#score').textContent=0;$('#streak').textContent=0;$('#msg').textContent='';
+  $('#start').hidden=true;$('#end').hidden=true;$('#ans').disabled=false;$('#skip').disabled=false;next();
+  clearInterval(tick);tick=setInterval(function(){var left=Math.max(0,end-performance.now());$('#time').textContent=Math.ceil(left/1000);$('#bar').style.width=(left/600)+'%';if(left<=0)finish()},100)}
+function finish(){
+  clearInterval(tick);run=false;$('#ans').disabled=true;$('#skip').disabled=true;
+  var all=bestAll(),k=mode+'-'+diff,prev=all[k],msg;
+  if(prev==null||score>prev){all[k]=score;saveBest(all);msg=prev==null?'First score on this setting!':'New personal best!'}else msg='Your best here is '+prev+'.';
+  $('#fs').textContent=score;$('#fd').textContent=ok+' correct out of '+tot+(tot?' ('+Math.round(ok/tot*100)+'%)':'')+' · best streak '+bs;$('#fb').textContent=msg;
+  $('#end').hidden=false;showBest();$('#bar').style.width='100%';$('#time').textContent=60}
+$('#go').onclick=start;$('#again').onclick=start;
+$('#skip').onclick=function(){if(run){judge(false)}};
+$('#ans').addEventListener('input',function(){this.value=this.value.replace(/[^0-9]/g,'');check(false)});
+$('#ans').addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();check(true)}});
+document.addEventListener('keydown',function(e){if(e.key==='Enter'&&!run&&!$('#start').hidden)start()});
+showBest();
+document.querySelectorAll('ins.adsbygoogle').forEach(function(el){if(el.offsetParent===null)return;try{(window.adsbygoogle=window.adsbygoogle||[]).push({})}catch(e){}});
+})();
+</script></body></html>
