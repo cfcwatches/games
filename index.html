@@ -32,6 +32,7 @@ h1{font:800 clamp(32px,7vw,50px)/1.05 'Bricolage Grotesque',system-ui,sans-serif
 article{background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:6px 24px 18px;margin:36px 0 10px}
 article h2{font:800 22px 'Bricolage Grotesque',system-ui,sans-serif;margin:20px 0 4px}a{color:var(--accent)}
 footer{text-align:center;color:var(--mute);font-size:14px;padding:6px 0 28px}footer a{font-weight:600;text-decoration:none;margin:0 8px}
+.daily{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;text-decoration:none;color:inherit;background:linear-gradient(120deg,hsl(268 80% 58%/.16),hsl(312 80% 58%/.16));border:1px solid var(--line);border-radius:18px;padding:14px 18px;margin:0 0 18px}.daily b{display:block;font:800 19px 'Bricolage Grotesque',system-ui,sans-serif}.daily span{color:var(--mute);font-size:15px}.daily .dgo{background:var(--accent);color:#fff;font-weight:800;border-radius:12px;padding:9px 18px;font-size:16px}
 @media (prefers-reduced-motion:reduce){.g{transition:none}}
 </style><link rel="icon" href="favicon.ico" sizes="48x48">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
@@ -42,6 +43,7 @@ footer{text-align:center;color:var(--mute);font-size:14px;padding:6px 0 28px}foo
 <div class="adwrap adtop"><ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-7925282448688414" data-ad-slot="8192459900" data-ad-format="horizontal" data-full-width-responsive="true"></ins></div>
 <h1>Free games for curious minds</h1>
 <p class="lead">Colourful puzzles, quick maths and a quiz to test your general knowledge. No sign-up, and it works on your phone.</p>
+<a class="daily" id="daily" href="sudoku.html?daily=1"><div><b>Today’s daily Sudoku</b><span id="dtext">One puzzle for everyone, every day.</span></div><span class="dgo" id="dgo">Play today’s puzzle</span></a>
 <div class="grid">
 <a class="g" style="--h:268" href="sudoku.html"><div class="art"><div class="mini" aria-hidden="true"><i style="--c:352">1</i><i style="--c:24">2</i><i style="--c:45">3</i><i style="--c:140">4</i><i style="--c:172">5</i><i style="--c:200">6</i><i style="--c:230">7</i><i style="--c:268">8</i><i style="--c:312">9</i></div></div><h2>Sudoku</h2><p>Classic puzzles where every digit has its own colour. Four difficulty levels, notes, hints and best times.</p><div class="meta" id="m-sudoku">New puzzle every time</div><span class="go">Play Sudoku</span></a>
 <a class="g" style="--h:24" href="maths-sprint.html"><div class="art" aria-hidden="true">7 × 8</div><h2>Maths Sprint</h2><p>Sixty seconds of mental maths. Add, subtract, multiply, divide and work out percentages, as fast as you can.</p><div class="meta" id="m-maths">How many can you solve?</div><span class="go">Start sprinting</span></a>
@@ -62,7 +64,13 @@ function get(k){try{return JSON.parse(localStorage.getItem(k)||'null')}catch(e){
 function vals(o){return o?Object.keys(o).map(function(k){return o[k]}).filter(function(v){return typeof v==='number'}):[]}
 var s=vals(get('hue-best')),m=vals(get('hue-maths-best')),q=vals(get('hue-quiz-best'));
 function mmss(n){return String(Math.floor(n/60)).padStart(2,'0')+':'+String(n%60).padStart(2,'0')}
-if(s.length)document.getElementById('m-sudoku').textContent='Fastest time: '+mmss(Math.min.apply(null,s));
+function ds(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
+var dd=get('hue-daily')||{},now=new Date(),td=ds(now),yd=new Date(now);yd.setDate(yd.getDate()-1);
+var streak=(dd.last===td||dd.last===ds(yd))?(dd.streak||0):0,diffs=['Expert','Easy','Easy','Medium','Medium','Hard','Hard'],pt=diffs[now.getDay()];
+var parts=[];if(s.length)parts.push('Fastest: '+mmss(Math.min.apply(null,s)));if(streak)parts.push('Daily streak: '+streak);
+if(parts.length)document.getElementById('m-sudoku').textContent=parts.join(' · ');
+if(dd.done&&dd.done[td]){document.getElementById('dtext').textContent='Solved today in '+mmss(dd.done[td].t)+(streak?' · '+streak+'-day streak':'')+'. New puzzle tomorrow!';document.getElementById('dgo').textContent='See result'}
+else document.getElementById('dtext').textContent=(streak?'Keep your '+streak+'-day streak alive! ':'')+'Today’s puzzle is '+pt+'. Everyone gets the same one.';
 if(m.length)document.getElementById('m-maths').textContent='Top score: '+Math.max.apply(null,m);
 if(q.length)document.getElementById('m-quiz').textContent='Best score: '+Math.max.apply(null,q)+'/10';
 document.querySelectorAll('ins.adsbygoogle').forEach(function(el){if(el.offsetParent===null)return;try{(window.adsbygoogle=window.adsbygoogle||[]).push({})}catch(e){}});

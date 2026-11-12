@@ -77,6 +77,7 @@ button{touch-action:manipulation}
 @media (max-width:700px){.ctl{position:sticky;bottom:0;z-index:5;background:var(--bg);padding:6px 0 calc(8px + env(safe-area-inset-bottom,0px));margin-top:8px;box-shadow:0 -10px 14px -6px var(--bg)}.tools{margin:0 0 8px}.tools button{padding:6px 2px;font-size:12px}.tools svg{width:18px;height:18px}.ad-top{height:50px;max-width:320px}.logo{font-size:22px}header{padding-top:10px;gap:8px 16px}.bar{margin-bottom:6px}.levels button{padding:6px 12px;font-size:14px}.board{width:min(100%,max(260px,calc(100dvh - 330px)));margin:0 auto}}
 footer a{color:var(--accent);font-weight:600;text-decoration:none}footer a:hover{text-decoration:underline}.fl{display:flex;flex-wrap:wrap;justify-content:center;gap:6px 18px;margin-bottom:10px;font-size:14px}
 .adwrap{text-align:center}.adtop{max-width:728px;margin:8px auto;min-height:50px}.adrect{max-width:300px;margin:0 auto;min-height:250px}.adfoot{max-width:728px;margin:48px auto 20px;min-height:50px}
+.toast{position:fixed;left:50%;bottom:calc(130px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:12px;font-weight:600;font-size:14px;opacity:0;pointer-events:none;transition:opacity .3s;z-index:25;text-align:center;max-width:90vw}.toast.on{opacity:1}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7925282448688414" crossorigin="anonymous"></script>
@@ -92,6 +93,7 @@ footer a{color:var(--accent);font-weight:600;text-decoration:none}footer a:hover
     <button role="tab" data-l="medium" aria-selected="false">Medium</button>
     <button role="tab" data-l="hard" aria-selected="false">Hard</button>
     <button role="tab" data-l="expert" aria-selected="false">Expert</button>
+    <button role="tab" data-l="daily" aria-selected="false">Daily</button>
   </div>
 </header>
 
@@ -147,6 +149,7 @@ footer a{color:var(--accent);font-weight:600;text-decoration:none}footer a:hover
     <button class="primary" id="again">Play another</button>
   </div>
 </div>
+<div class="toast" id="toast" role="status"></div>
 <canvas id="fx"></canvas>
 
 <script>
@@ -154,7 +157,8 @@ footer a{color:var(--accent);font-weight:600;text-decoration:none}footer a:hover
 const $=s=>document.querySelector(s);
 const CL={easy:42,medium:34,hard:29,expert:25};
 const HUES=[0,352,24,45,140,172,200,230,268,312];
-const shuffle=a=>{for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
+let rng=Math.random;
+const shuffle=a=>{for(let i=a.length-1;i>0;i--){const j=rng()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
 const box=i=>((i/27|0)*3)+((i%9)/3|0);
 const peer=(a,b)=>a!==b&&((a/9|0)===(b/9|0)||a%9===b%9||box(a)===box(b));
 
@@ -179,7 +183,7 @@ function gen(clues){const s=Array(81).fill(0);solve(s,1,true,true);const p=s.sli
     if(solve(p.slice(),2,false,false)!==1)p[i]=v;else n--}
   return[s,p]}
 
-let level='easy',sol,giv,val,nt,sel=-1,noteMode=false,hist=[],mist=0,t=0,timer=null,done=false;
+let level='easy',diff='easy',daily=null,lastLevel='easy',sol,giv,val,nt,sel=-1,noteMode=false,hist=[],mist=0,t=0,timer=null,done=false;
 const boardEl=$('#board'),cells=[];
 for(let b=0;b<9;b++){const bx=document.createElement('div');bx.className='box';boardEl.appendChild(bx)}
 for(let i=0;i<81;i++){const el=document.createElement('button');el.className='cell';el.type='button';el.setAttribute('role','gridcell');
@@ -193,14 +197,40 @@ function best(){try{return JSON.parse(localStorage.getItem('hue-best')||'{}')}ca
 function saveBest(b){try{localStorage.setItem('hue-best',JSON.stringify(b))}catch(e){}}
 function showBest(){const b=best();$('#best').innerHTML=Object.keys(CL).map(k=>`<span>${k[0].toUpperCase()+k.slice(1)}</span><span>${b[k]!=null?fmt(b[k]):'–'}</span>`).join('')}
 
+function ds(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
+function todayStr(){return ds(new Date())}
+const DOW=['expert','easy','easy','medium','medium','hard','hard'];
+function seedOf(x){let h=2166136261;for(let i=0;i<x.length;i++){h^=x.charCodeAt(i);h=Math.imul(h,16777619)}return h>>>0}
+function mulberry(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+function getDaily(){try{return JSON.parse(localStorage.getItem('hue-daily')||'{}')||{}}catch(e){return{}}}
+function setDaily(o){try{localStorage.setItem('hue-daily',JSON.stringify(o))}catch(e){}}
+function dailyDone(){const d=getDaily();return d.done&&d.done[todayStr()]}
+function persist(){if(done||!sol)return;try{localStorage.setItem('hue-save',JSON.stringify({l:level,d:diff,dy:daily,sol:sol,giv:giv,val:val,nt:nt,m:mist,t:t}))}catch(e){}}
+function clearSave(){try{localStorage.removeItem('hue-save')}catch(e){}}
+function startTimer(){clearInterval(timer);timer=setInterval(()=>{if(!document.hidden){t++;$('#time').textContent=fmt(t);if(t%5===0)persist()}},1000)}
+function markTabs(){[...$('#levels').children].forEach(k=>k.setAttribute('aria-selected',k.dataset.l===level))}
+function toast(m){const e=$('#toast');e.textContent=m;e.classList.add('on');setTimeout(()=>e.classList.remove('on'),3200)}
 function newGame(){
   $('#win').classList.remove('on');
   clearInterval(timer);boardEl.style.opacity='.4';
+  const isDaily=level==='daily',td=todayStr();
+  diff=isDaily?DOW[new Date().getDay()]:level;daily=isDaily?td:null;
   setTimeout(()=>{
-    const[s,p]=gen(CL[level]);sol=s;giv=p.map(v=>v>0);val=p.slice();nt=Array(81).fill(0);
+    if(isDaily)rng=mulberry(seedOf('hue-sudoku-'+td));
+    let r;try{r=gen(CL[diff])}finally{rng=Math.random}
+    sol=r[0];giv=r[1].map(v=>v>0);val=r[1].slice();nt=Array(81).fill(0);
     sel=-1;hist=[];mist=0;t=0;done=false;boardEl.style.opacity='';
-    timer=setInterval(()=>{if(!document.hidden){t++;$('#time').textContent=fmt(t)}},1000);
-    render()},30)}
+    $('#time').textContent=fmt(0);markTabs();startTimer();render()},30)}
+function showDailyDone(){const d=getDaily(),r=d.done[todayStr()];
+  $('#winTime').textContent=fmt(r.t);$('#winSub').textContent='You’ve already solved today’s daily puzzle.';
+  $('#winBest').textContent='Streak: '+(d.streak||0)+' day'+(d.streak===1?'':'s')+' · best '+(d.best||0)+'. A new puzzle arrives tomorrow!';
+  $('#again').textContent='Play a regular puzzle';$('#win').classList.add('on');$('#again').focus()}
+function resume(v){
+  level=v.l||'easy';diff=v.d||level;daily=v.dy||null;
+  if(daily&&daily!==todayStr()){daily=null;level=diff}
+  if(level!=='daily')lastLevel=level;
+  sol=v.sol;giv=v.giv;val=v.val;nt=v.nt;mist=v.m||0;t=v.t||0;sel=-1;hist=[];done=false;
+  $('#time').textContent=fmt(t);markTabs();startTimer();render();toast('Welcome back! Your game was restored.')}
 
 function render(){
   const sv=sel>=0?val[sel]:0;
@@ -220,6 +250,7 @@ function render(){
   [...padEl.children].forEach(b=>{const d=+b.dataset.d;let n=0;for(let i=0;i<81;i++)if(val[i]===d&&sol[i]===d)n++;
     b.innerHTML=`${d}<small>${9-n} left</small>`;b.classList.toggle('out',n===9)});
   $('#mist').textContent=mist;$('#notes').setAttribute('aria-pressed',noteMode);
+  persist();
 }
 function snap(){hist.push({v:val.slice(),n:nt.slice()});if(hist.length>200)hist.shift()}
 function place(d){
@@ -240,11 +271,21 @@ function hint(){if(done)return;
 function check(){
   for(let i=0;i<81;i++)if(val[i]!==sol[i])return;
   done=true;clearInterval(timer);
+  clearSave();
   const b=best();let msg='';
-  if(b[level]==null||t<b[level]){msg=b[level]==null?'First '+level+' win. That’s your time to beat.':'New personal best!';b[level]=t;saveBest(b)}
-  else msg='Your best on '+level+' is '+fmt(b[level])+'.';
+  if(daily){
+    const d=getDaily(),td=todayStr();d.done=d.done||{};
+    if(daily===td&&!d.done[td]){
+      d.done[td]={t:t,m:mist};
+      const y=new Date();y.setDate(y.getDate()-1);
+      d.streak=d.last===ds(y)?(d.streak||0)+1:1;d.last=td;d.best=Math.max(d.best||0,d.streak);
+      const ks=Object.keys(d.done).sort();while(ks.length>30)delete d.done[ks.shift()];
+      setDaily(d);msg='Daily streak: '+d.streak+' day'+(d.streak===1?'':'s')+'. See you tomorrow!';
+    }else msg='That daily puzzle has already been counted.';
+  }else if(b[diff]==null||t<b[diff]){msg=b[diff]==null?'First '+diff+' win. That’s your time to beat.':'New personal best!';b[diff]=t;saveBest(b)}
+  else msg='Your best on '+diff+' is '+fmt(b[diff])+'.';
   $('#winTime').textContent=fmt(t);$('#winBest').textContent=msg;
-  $('#winSub').textContent=level[0].toUpperCase()+level.slice(1)+' puzzle, '+mist+(mist===1?' mistake':' mistakes');
+  $('#winSub').textContent=(daily?'Daily ':'')+diff[0].toUpperCase()+diff.slice(1)+' puzzle, '+mist+(mist===1?' mistake':' mistakes');
   showBest();confetti();setTimeout(()=>{$('#win').classList.add('on');$('#again').focus()},700)}
 
 function confetti(){
@@ -255,9 +296,14 @@ function confetti(){
     ps.forEach(p=>{p.vy+=.35;p.x+=p.vx;p.y+=p.vy;p.r+=.2;x.save();x.translate(p.x,p.y);x.rotate(p.r);x.fillStyle=`hsl(${p.h} 85% 58%)`;x.fillRect(-p.s/2,-p.s/2,p.s,p.s*.6);x.restore()});
     if(++f<200)requestAnimationFrame(step);else x.clearRect(0,0,cv.width,cv.height)})()}
 
-$('#levels').onclick=e=>{const b=e.target.closest('button');if(!b)return;level=b.dataset.l;
-  [...$('#levels').children].forEach(k=>k.setAttribute('aria-selected',k===b));newGame()};
-$('#newGame').onclick=newGame;$('#again').onclick=newGame;
+$('#levels').onclick=e=>{const b=e.target.closest('button');if(!b)return;const l=b.dataset.l;
+  if(l==='daily'){
+    if(dailyDone()){showDailyDone();return}
+    if(daily===todayStr()&&!done&&level==='daily')return;
+    level='daily';newGame();
+  }else{lastLevel=l;level=l;newGame()}};
+$('#newGame').onclick=newGame;
+$('#again').onclick=()=>{$('#again').textContent='Play another';if(level==='daily'){level=lastLevel;markTabs()}newGame()};
 $('#undo').onclick=undo;$('#erase').onclick=erase;$('#hint').onclick=hint;
 $('#notes').onclick=()=>{noteMode=!noteMode;render()};
 $('#theme').onclick=()=>{const r=document.documentElement;const dark=getComputedStyle(r).colorScheme==='dark';r.dataset.theme=dark?'light':'dark'};
@@ -272,7 +318,16 @@ document.addEventListener('keydown',e=>{
   else if(k.startsWith('Arrow')){e.preventDefault();if(sel<0)sel=40;else{let r=sel/9|0,c=sel%9;
     if(k==='ArrowUp')r=(r+8)%9;if(k==='ArrowDown')r=(r+1)%9;if(k==='ArrowLeft')c=(c+8)%9;if(k==='ArrowRight')c=(c+1)%9;sel=r*9+c}render()}
 });
-showBest();newGame();
+showBest();
+(function init(){
+  let v=null;try{v=JSON.parse(localStorage.getItem('hue-save')||'null')}catch(e){}
+  const ok=v&&[v.sol,v.giv,v.val,v.nt].every(a=>Array.isArray(a)&&a.length===81);
+  if(/[?&]daily/.test(location.search)){
+    if(dailyDone()){newGame();showDailyDone();return}
+    if(ok&&v.dy===todayStr()){resume(v);return}
+    level='daily';newGame();return}
+  if(ok){resume(v);return}
+  newGame()})();
 })();
 </script>
 <script>document.querySelectorAll("ins.adsbygoogle").forEach(function(el){if(el.offsetParent===null)return;try{(window.adsbygoogle=window.adsbygoogle||[]).push({})}catch(e){}});</script>
