@@ -75,6 +75,7 @@ footer{max-width:1180px;margin:0 auto;padding:0 16px 30px;text-align:center;colo
 @media (min-width:1100px){main{grid-template-columns:160px minmax(0,560px) 300px;justify-content:center;align-items:start}.left{display:block}.side{max-width:300px}}
 button{touch-action:manipulation}
 @media (max-width:700px){.ctl{position:sticky;bottom:0;z-index:5;background:var(--bg);padding:6px 0 calc(8px + env(safe-area-inset-bottom,0px));margin-top:8px;box-shadow:0 -10px 14px -6px var(--bg)}.tools{margin:0 0 8px}.tools button{padding:6px 2px;font-size:12px}.tools svg{width:18px;height:18px}.ad-top{height:50px;max-width:320px}.logo{font-size:22px}header{padding-top:10px;gap:8px 16px}.bar{margin-bottom:6px}.levels button{padding:6px 12px;font-size:14px}.board{width:min(100%,max(260px,calc(100dvh - 330px)));margin:0 auto}}
+footer a{color:var(--accent);font-weight:600;text-decoration:none}footer a:hover{text-decoration:underline}.fl{display:flex;flex-wrap:wrap;justify-content:center;gap:6px 18px;margin-bottom:10px;font-size:14px}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 </head>
@@ -130,7 +131,7 @@ button{touch-action:manipulation}
 
 <!-- AD SLOT: footer banner (mobile shows this one) -->
 <div class="ad ad-foot">Ad space 728×90</div>
-<footer>Hue Sudoku · Every puzzle has exactly one solution.</footer>
+<footer><nav class="fl"><a href="how-to-play.html">How to play</a><a href="strategies.html">Solving strategies</a><a href="about.html">About</a><a href="privacy.html">Privacy policy</a></nav>Hue Sudoku · Every puzzle has exactly one solution.</footer>
 
 <div class="overlay" id="win" role="dialog" aria-modal="true" aria-labelledby="winT">
   <div class="modal">

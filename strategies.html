@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sudoku solving strategies – Hue Sudoku</title><meta name="description" content="Beginner to advanced Sudoku techniques: scanning, singles, pairs, pointing pairs and X-Wing, explained simply.">
+<link rel="stylesheet" href="style.css"></head><body>
+<header><a class="logo" href="index.html">Hue Sudoku</a>
+<nav><a href="index.html">Play</a><a href="how-to-play.html">How to play</a><a href="strategies.html" aria-current="page">Strategies</a><a href="about.html">About</a></nav></header>
+<main>
+<h1>Sudoku solving strategies</h1>
+<p class="lead">Every Sudoku can be solved by logic alone. These techniques are roughly in order from beginner to advanced.</p>
+<h2>1. Scanning</h2>
+<p>Pick a number, say 7, and look at where it already appears. Each 7 rules out its whole row, column and box. Often a box has only one square left where a 7 can go. Repeat for every digit, and keep going round until nothing new turns up.</p>
+<h2>2. Naked singles</h2>
+<p>If a square has only one number that can legally go in it, because the other eight appear in its row, column or box, that number is the answer. Look first at squares in crowded rows and columns.</p>
+<h2>3. Hidden singles</h2>
+<p>If a number can only go in one square within a row, column or box, it must go there, even if that square could also hold other numbers. Hidden singles are the main technique for Easy and Medium puzzles.</p>
+<h2>4. Pencil notes</h2>
+<p>When scanning stops working, write every candidate in each empty square using the Notes button. Notes reveal the patterns below, and ours clear automatically as you place digits.</p>
+<h2>5. Naked pairs</h2>
+<p>If two squares in the same row, column or box both have the same two candidates, such as 3 and 8, then those two numbers must fill those two squares. Remove 3 and 8 from every other square in that unit.</p>
+<h2>6. Pointing pairs and triples</h2>
+<p>If a candidate in a box appears only in one row or column, it must go in that line inside the box. So you can remove it from the rest of that row or column outside the box.</p>
+<h2>7. X-Wing</h2>
+<p>Suppose a digit appears as a candidate in exactly two squares in each of two rows, and those squares line up in the same two columns. The digit must occupy opposite corners of that rectangle, so you can remove it from everything else in those two columns.</p>
+<h2>Habits that help</h2>
+<ul><li>Work on the most crowded rows, columns and boxes first.</li><li>Switch numbers often: finishing one digit across the grid is a good source of progress.</li><li>If you are stuck, check for a mistake before looking for a harder technique.</li><li>Take a short break. A fresh look often finds what you missed.</li></ul>
+<a class="cta" href="index.html">Try them on a puzzle</a>
+</main>
+<footer><a href="about.html">About</a><a href="privacy.html">Privacy policy</a><br>© 2026 Hue Sudoku. All rights reserved.</footer>
+</body></html>
