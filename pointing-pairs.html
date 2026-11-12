@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pointing pairs in Sudoku – Hue Sudoku</title><meta name="description" content="How pointing pairs and box-line reduction work in Sudoku, explained step by step.">
+<link rel="stylesheet" href="style.css">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7925282448688414" crossorigin="anonymous"></script>
+</head><body>
+<header><a class="logo" href="index.html">Hue Sudoku</a>
+<nav><a href="index.html">Play</a><a href="how-to-play.html">How to play</a><a href="strategies.html">Strategies</a><a href="about.html">About</a></nav></header>
+<main>
+<h1>Pointing pairs and triples</h1>
+<p class="lead">Pointing pairs link a box to a row or column. They are one of the most useful techniques for Medium and Hard puzzles.</p>
+<h2>The idea</h2>
+<p>Pick a box and a number. If every square in that box where the number can still go lies in the same row, then the number must be placed in that row inside the box. So it cannot appear anywhere else in that row, outside the box. The same works for a column. With two squares it is called a pointing pair, and with three a pointing triple.</p>
+<h2>A worked example</h2>
+<p>In the top-left box, the number 4 can only go in the first and second squares of the top row, because the rest of the box is blocked. One of those two squares will hold the 4. Therefore no other square in the top row, in the top-middle or top-right boxes, can be a 4. Remove 4 from those candidates in your notes.</p>
+<h2>The reverse: box-line reduction</h2>
+<p>The same idea also works the other way round. If, in a row, a number can only go in squares that all lie within one box, then it cannot appear elsewhere in that box. Remove it from the box’s other squares.</p>
+<h2>How to find them</h2>
+<ul><li>Use <b>Notes</b> so candidates are visible.</li><li>Take one digit at a time and look at each box. Ask whether its candidates for that digit form a straight line.</li><li>Our colour highlighting helps here: select a digit and every square holding it lights up.</li></ul>
+<h2>Tip</h2>
+<p>After removing candidates, look for new singles. A pointing pair rarely solves a square directly, but it often unlocks one. If you are comfortable with this, try the more advanced <a href="x-wing.html">X-Wing</a>.</p>
+<a class="cta" href="index.html">Practise on a puzzle</a> <a href="strategies.html">All strategies</a>
+</main>
+<footer><a href="about.html">About</a><a href="privacy.html">Privacy policy</a><br>© 2026 Hue Sudoku. All rights reserved.</footer>
+</body></html>

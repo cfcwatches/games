@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Naked pairs in Sudoku – Hue Sudoku</title><meta name="description" content="How to spot and use naked pairs in Sudoku, with a worked example and common mistakes.">
+<link rel="stylesheet" href="style.css">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7925282448688414" crossorigin="anonymous"></script>
+</head><body>
+<header><a class="logo" href="index.html">Hue Sudoku</a>
+<nav><a href="index.html">Play</a><a href="how-to-play.html">How to play</a><a href="strategies.html">Strategies</a><a href="about.html">About</a></nav></header>
+<main>
+<h1>Naked pairs in Sudoku</h1>
+<p class="lead">A naked pair is one of the first techniques to learn once simple scanning stops working. It lets you remove candidates without placing a single number.</p>
+<h2>The idea</h2>
+<p>Look at one row, column or box. If exactly two empty squares in it have the same two candidates and nothing else, say both can only be 3 or 8, then those squares must contain a 3 and an 8 between them. Which is which does not matter yet. What matters is that 3 and 8 are used up, so no other square in that row, column or box can be a 3 or an 8.</p>
+<h2>A worked example</h2>
+<p>Suppose a row has these candidates in its empty squares: A = {3, 8}, B = {3, 8}, C = {3, 5, 8}, D = {2, 3, 8, 9}. Squares A and B are a naked pair. Remove 3 and 8 from C and D, leaving C = {5} and D = {2, 9}. C is now solved as a 5, and you have made progress without guessing.</p>
+<h2>How to find them</h2>
+<ul><li>Turn on <b>Notes</b> and fill in the candidates for a crowded row, column or box.</li><li>Scan for two squares showing the identical pair of numbers.</li><li>Check that the pair sits in the same unit. A pair that shares a row also removes candidates only along that row, unless the two squares are also in the same box, in which case the box benefits too.</li></ul>
+<h2>Common mistakes</h2>
+<ul><li>Treating two squares with <i>similar</i> candidates as a pair. Both must contain exactly the same two numbers.</li><li>Removing the pair’s numbers from the pair itself.</li><li>Starting from notes that contain a mistake. If a result looks impossible, recheck your notes.</li></ul>
+<h2>Going further</h2>
+<p>The same logic extends to naked triples and quads, and to “hidden” pairs, where two numbers appear in only two squares of a unit. Our next technique, <a href="pointing-pairs.html">pointing pairs</a>, works across boxes and lines.</p>
+<a class="cta" href="index.html">Practise on a puzzle</a> <a href="strategies.html">All strategies</a>
+</main>
+<footer><a href="about.html">About</a><a href="privacy.html">Privacy policy</a><br>© 2026 Hue Sudoku. All rights reserved.</footer>
+</body></html>

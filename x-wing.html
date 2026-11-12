@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>X-Wing in Sudoku – Hue Sudoku</title><meta name="description" content="A clear explanation of the X-Wing technique in Sudoku, with a worked example for Hard and Expert puzzles.">
+<link rel="stylesheet" href="style.css">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7925282448688414" crossorigin="anonymous"></script>
+</head><body>
+<header><a class="logo" href="index.html">Hue Sudoku</a>
+<nav><a href="index.html">Play</a><a href="how-to-play.html">How to play</a><a href="strategies.html">Strategies</a><a href="about.html">About</a></nav></header>
+<main>
+<h1>The X-Wing technique</h1>
+<p class="lead">X-Wing is an advanced pattern that often unlocks stuck Hard and Expert puzzles. It looks complicated, but the logic is short.</p>
+<h2>The pattern</h2>
+<p>Choose a digit, say 6. Find two rows where 6 is a candidate in exactly two squares each, and where those squares fall in the same two columns. The four squares form the corners of a rectangle.</p>
+<h2>Why it works</h2>
+<p>In each of the two rows, the 6 must go in one of its two squares. If the first row’s 6 sits in the left column, the second row’s 6 cannot also be in that column, so it sits in the right column. Either way, the two 6s occupy opposite corners of the rectangle and use up both columns. So no other square in those two columns can be a 6.</p>
+<h2>A worked example</h2>
+<p>Row 2 allows a 6 only in columns 3 and 7. Row 8 also allows a 6 only in columns 3 and 7. That is an X-Wing. Remove 6 from every other square in columns 3 and 7, in rows 1, 3, 4, 5, 6, 7 and 9. You may find one of those squares was the only other place a 6 could go, which now reveals a different answer elsewhere.</p>
+<h2>The column version</h2>
+<p>The pattern also works turned on its side. Find two columns where a digit appears in exactly two squares each, lined up in the same two rows. Then remove that digit from the rest of those two rows.</p>
+<h2>How to find them</h2>
+<ul><li>Fill in notes for the whole grid.</li><li>Work one digit at a time, and scan each row for a digit with only two candidate squares.</li><li>When two such rows match columns, check the rectangle and make your eliminations.</li></ul>
+<p>Before using X-Wing, make sure you have tried <a href="naked-pairs.html">naked pairs</a> and <a href="pointing-pairs.html">pointing pairs</a>, because they are quicker to spot.</p>
+<a class="cta" href="index.html">Try an Expert puzzle</a> <a href="strategies.html">All strategies</a>
+</main>
+<footer><a href="about.html">About</a><a href="privacy.html">Privacy policy</a><br>© 2026 Hue Sudoku. All rights reserved.</footer>
+</body></html>
