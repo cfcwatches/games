@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Hue Word – free daily 5-letter word game – Hue Sudoku</title>
+<meta name="description" content="Guess the hidden five-letter word in six tries. A new word every day, plus unlimited practice. Free, no sign-up, works on your phone.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;600;800&display=swap" rel="stylesheet">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7925282448688414" crossorigin="anonymous"></script>
+<style>
+:root{--bg:#f3effb;--panel:#fff;--ink:#241f3d;--mute:#5e5683;--line:#d6cdee;--accent:#6c4cf1;--ok:#13a05a;--bad:#e5334f;--t-ok:#13a05a;--t-near:#c28a00;--t-no:#6f6893;--dl:44%;color-scheme:light}
+@media (prefers-color-scheme:dark){:root{--bg:#0f1127;--panel:#191c3a;--ink:#f1eeff;--mute:#a9a3d2;--line:#2f3466;--accent:#a592ff;--ok:#3ddc8a;--bad:#ff5d77;--t-ok:#1a9a5b;--t-near:#a87900;--t-no:#3a3f73;--dl:68%;color-scheme:dark}}
+:root[data-cb="1"]{--t-ok:#e8661c;--t-near:#2f7fd6}
+@media (prefers-color-scheme:dark){:root[data-cb="1"]{--t-ok:#e8661c;--t-near:#3a86d9}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.6 system-ui,sans-serif;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+.wrap{max-width:560px;margin:0 auto;padding:0 16px}
+header{padding:18px 0 6px;display:flex;flex-wrap:wrap;gap:10px 20px;align-items:center;justify-content:space-between}
+.logo{font:800 26px 'Bricolage Grotesque',system-ui,sans-serif;color:var(--ink);text-decoration:none;letter-spacing:-.02em}
+nav a{color:var(--mute);text-decoration:none;font-weight:600;font-size:15px;margin-right:14px}nav a[aria-current]{color:var(--accent)}
+button{font:inherit;color:inherit;cursor:pointer;touch-action:manipulation}
+button:focus-visible,a:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+h1{font:800 clamp(28px,6vw,38px)/1.1 'Bricolage Grotesque',system-ui,sans-serif;letter-spacing:-.02em;margin:14px 0 4px}
+.sub{color:var(--mute);margin:0 0 12px}
+.tools{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:8px 0}
+.tools .sp{flex:1}
+.seg{display:flex;gap:6px}
+.pill{border:1px solid var(--line);background:var(--panel);border-radius:999px;padding:7px 14px;font-weight:600;font-size:15px;color:var(--mute)}
+.pill[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+.stage{position:relative;background:var(--panel);border:1px solid var(--line);border-top:6px solid var(--accent);border-radius:22px;padding:18px 12px 14px;box-shadow:0 18px 50px -24px rgba(80,60,200,.5)}
+.toast{position:absolute;left:50%;top:10px;transform:translateX(-50%);background:var(--ink);color:var(--bg);font-weight:800;border-radius:12px;padding:8px 16px;z-index:5;pointer-events:none;white-space:nowrap;opacity:0;transition:opacity .15s}
+.toast.on{opacity:1}
+.board{display:grid;grid-template-rows:repeat(6,1fr);gap:6px;width:min(100%,330px,max(210px,calc((100svh - 540px)*.83)));margin:0 auto 14px}
+.row{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.tile{aspect-ratio:1;display:flex;align-items:center;justify-content:center;border:2px solid var(--line);border-radius:10px;font:800 clamp(24px,8vw,32px)/1 'Bricolage Grotesque',system-ui,sans-serif;text-transform:uppercase;color:var(--ink);background:var(--bg);user-select:none}
+.tile[data-s="fill"]{border-color:var(--mute);animation:pop .12s}
+.tile[data-s="ok"],.tile[data-s="near"],.tile[data-s="no"]{color:#fff;border-color:transparent}
+.tile[data-s="ok"]{background:var(--t-ok)}.tile[data-s="near"]{background:var(--t-near)}.tile[data-s="no"]{background:var(--t-no)}
+.tile.flip{animation:flip .5s both}
+.row.shake{animation:shake .45s}
+.row.bounce .tile{animation:bounce .6s both}
+@keyframes pop{50%{transform:scale(1.08)}}
+@keyframes flip{0%{transform:rotateX(0)}50%{transform:rotateX(90deg)}100%{transform:rotateX(0)}}
+@keyframes shake{20%,60%{transform:translateX(-6px)}40%,80%{transform:translateX(6px)}}
+@keyframes bounce{0%,20%{transform:translateY(0)}40%{transform:translateY(-14px)}60%{transform:translateY(3px)}80%{transform:translateY(-5px)}100%{transform:translateY(0)}}
+.kb{display:flex;flex-direction:column;gap:6px;max-width:500px;margin:0 auto}
+.kr{display:flex;gap:5px;justify-content:center}
+.key{flex:1;min-width:0;height:52px;border:0;border-radius:9px;background:var(--line);color:var(--ink);font-weight:800;font-size:15px;text-transform:uppercase;padding:0}
+.key.wide{flex:1.6;font-size:13px}
+.key[data-s="ok"]{background:var(--t-ok);color:#fff}.key[data-s="near"]{background:var(--t-near);color:#fff}.key[data-s="no"]{background:var(--t-no);color:#fff;opacity:.75}
+.key:active{transform:scale(.96)}
+.modal{position:fixed;inset:0;background:rgba(15,17,39,.6);display:flex;align-items:center;justify-content:center;padding:16px;z-index:20}
+.modal[hidden]{display:none}
+.mbox{position:relative;background:var(--panel);border:1px solid var(--line);border-radius:22px;padding:24px 22px 20px;width:min(100%,420px);max-height:92vh;overflow:auto;text-align:center;box-shadow:0 24px 70px -20px rgba(0,0,0,.5)}
+.mbox h2{font:800 28px 'Bricolage Grotesque',system-ui,sans-serif;margin:0 0 4px}
+.mbox .x{position:absolute;top:10px;right:12px;border:0;background:none;font-size:26px;line-height:1;color:var(--mute);padding:6px}
+.mbox p{margin:4px 0;color:var(--mute)}
+.ans{font:800 30px 'Bricolage Grotesque',system-ui,sans-serif;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin:2px 0 6px}
+.sg{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:14px 0}
+.sg div{font-size:12px;color:var(--mute);font-weight:600;line-height:1.2}
+.sg b{display:block;font:800 26px 'Bricolage Grotesque',system-ui,sans-serif;color:var(--ink)}
+.dist{text-align:left;margin:8px 0 14px}
+.dist div{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:600;color:var(--mute);margin:3px 0}
+.dist span{width:12px}
+.dist i{display:block;min-width:22px;background:var(--t-no);color:#fff;border-radius:6px;padding:0 8px;font-style:normal;text-align:right;font-weight:800}
+.dist i.hl{background:var(--t-ok)}
+.next{font-size:14px;color:var(--mute);margin-top:10px}.next b{color:var(--ink);font-variant-numeric:tabular-nums}
+.btn{background:var(--accent);color:#fff;border:0;border-radius:14px;padding:12px 26px;font-weight:800;font-size:17px;margin:4px}
+.ghost{background:none;border:1px solid var(--line);color:var(--mute);border-radius:12px;padding:10px 16px;font-weight:600;margin:4px}
+.adwrap{text-align:center}.adtop{max-width:728px;margin:6px auto;min-height:50px}.adfoot{max-width:728px;margin:48px auto 20px;min-height:50px}
+article{background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:6px 22px 18px;margin:34px 0 10px}
+article h2{font:800 21px 'Bricolage Grotesque',system-ui,sans-serif;margin:20px 0 4px}article p,article li{color:var(--ink)}
+.ex{display:flex;gap:5px;margin:8px 0}.ex .tile{width:44px;font-size:22px}
+footer{text-align:center;color:var(--mute);font-size:14px;padding:6px 0 28px}footer a{color:var(--accent);font-weight:600;text-decoration:none;margin:0 8px}
+@media (max-width:600px){.sub{display:none}.tools{margin:4px 0}.pill{padding:6px 12px;font-size:14px}h1{margin-top:6px}}
+@media (max-width:380px){.key{height:46px;font-size:13px}.kr{gap:4px}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style><link rel="icon" href="favicon.ico" sizes="48x48">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="canonical" href="https://huesudoku.com/word-guess.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Hue Sudoku">
+<meta property="og:title" content="Hue Word – free daily 5-letter word game – Hue Sudoku">
+<meta property="og:description" content="Guess the hidden five-letter word in six tries. A new word every day, plus unlimited practice. Free, no sign-up, works on your phone.">
+<meta property="og:url" content="https://huesudoku.com/word-guess.html">
+<meta property="og:image" content="https://huesudoku.com/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+</head><body><div class="wrap">
+<header><a class="logo" href="index.html">Hue Sudoku</a><nav><a href="index.html">All games</a><a href="sudoku.html">Sudoku</a><a href="maths-sprint.html">Maths Sprint</a><a href="quiz.html">Quiz</a><a href="word-guess.html" aria-current="page">Word Game</a></nav></header>
+<div class="adwrap adtop"><ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-7925282448688414" data-ad-slot="8192459900" data-ad-format="horizontal" data-full-width-responsive="true"></ins></div>
+<h1>Hue Word</h1>
+<p class="sub">Guess the five-letter word in six tries. A new word every day.</p>
+<div class="tools">
+<div class="seg" id="mode" role="group" aria-label="Game mode"><button type="button" class="pill" data-m="daily" aria-pressed="true">Daily</button><button type="button" class="pill" data-m="practice" aria-pressed="false">Practice</button></div>
+<span class="sp"></span>
+<button type="button" class="pill" id="cb" aria-pressed="false" title="Use orange and blue instead of green and amber">Colour-blind colours</button>
+<button type="button" class="pill" id="statsbtn">Stats</button>
+</div>
+<div class="stage">
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<div class="board" id="board" aria-label="Guess board"></div>
+<div class="kb" id="kb"></div>
+</div>
+
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="mt" hidden>
+<div class="mbox">
+<button class="x" id="mx" aria-label="Close">×</button>
+<h2 id="mt">Stats</h2>
+<div class="ans" id="mans" hidden></div>
+<p id="msub"></p>
+<div class="sg"><div><b id="s-p">0</b>Played</div><div><b id="s-w">0</b>Win %</div><div><b id="s-s">0</b>Streak</div><div><b id="s-m">0</b>Best streak</div></div>
+<div class="dist" id="dist" aria-label="Guess distribution"></div>
+<div id="actions"><button class="btn" id="share" hidden>Share result</button><button class="btn" id="newword" hidden>New practice word</button></div>
+<div class="next" id="next" hidden>Next word in <b id="cd">00:00:00</b></div>
+</div></div>
+
+<article>
+<h2>How to play</h2>
+<p>Type any five-letter word and press Enter. After each guess the tiles change colour to show how close you are:</p>
+<div class="ex" aria-hidden="true"><div class="tile" data-s="ok">S</div><div class="tile">L</div><div class="tile">I</div><div class="tile">C</div><div class="tile">E</div></div>
+<p><b>Colour one:</b> the letter is in the word and in the right place.</p>
+<div class="ex" aria-hidden="true"><div class="tile">T</div><div class="tile" data-s="near">R</div><div class="tile">A</div><div class="tile">I</div><div class="tile">N</div></div>
+<p><b>Colour two:</b> the letter is in the word, but in a different place.</p>
+<div class="ex" aria-hidden="true"><div class="tile">P</div><div class="tile">O</div><div class="tile" data-s="no">U</div><div class="tile">C</div><div class="tile">H</div></div>
+<p><b>Grey:</b> the letter is not in the word at all. A letter can appear twice in the answer, and the colours take that into account.</p>
+<h2>Daily and practice modes</h2>
+<p>Daily mode gives everyone the same word, and it changes at midnight your time. Your streak and win record are saved on this device. Practice mode lets you play as many random words as you like and does not affect your stats.</p>
+<h2>Tips for a good start</h2>
+<ul><li>Open with a word that uses common letters and different vowels, like STARE, ALONE or HOUSE.</li><li>Use your second guess to test new letters rather than repeating ones you already know.</li><li>Watch the keyboard: it remembers every letter you have ruled in or out.</li><li>Think about common endings and pairs, such as -ING, -ER, TH, SH and CH.</li></ul>
+<p>Prefer numbers? Try the <a href="sudoku.html">daily Sudoku</a> or the <a href="maths-sprint.html">Maths Sprint</a>.</p>
+</article>
+<div class="adwrap adfoot"><ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-7925282448688414" data-ad-slot="5056140614" data-ad-format="auto" data-full-width-responsive="true"></ins></div>
+<footer><a href="index.html">All games</a><a href="sudoku.html">Sudoku</a><a href="how-to-play.html">How to play Sudoku</a><a href="about.html">About</a><a href="privacy.html">Privacy policy</a><br>© 2026 Hue Sudoku. All rights reserved.</footer>
+</div>
+<script src="words.js"></script>
+<script>
+(function(){
+var $=function(s){return document.querySelector(s)};
+var LAUNCH=Date.UTC(2026,10,13); /* puzzle #1 = 13 Nov 2026 */
+var ANSWERS=window.HUE_ANSWERS||[],VALID={};
+ANSWERS.concat(window.HUE_EXTRA||[]).forEach(function(w){VALID[w]=1});
+var ROWS=6,COLS=5;
+var WIN=['Incredible!','Brilliant!','Great job!','Nicely done!','Got it!','Phew, just in time!'];
+function ls(k){try{return JSON.parse(localStorage.getItem(k)||'null')}catch(e){return null}}
+function sv(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+function ds(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
+function dayNum(d){return Math.max(0,Math.round((Date.UTC(d.getFullYear(),d.getMonth(),d.getDate())-LAUNCH)/864e5))}
+var now=new Date(),today=ds(now),yd=new Date(now);yd.setDate(yd.getDate()-1);var yest=ds(yd),dn=dayNum(now);
+var dailyWord=ANSWERS[dn%ANSWERS.length];
+var mode='daily',target=dailyWord,guesses=[],cur='',over=false,won=false,busy=false;
+var daily=ls('hue-word-daily');if(!daily||daily.date!==today)daily={date:today,day:dn,guesses:[],done:false,won:false};
+var stats=ls('hue-word-stats')||{played:0,wins:0,streak:0,max:0,dist:[0,0,0,0,0,0],lastWin:null};
+var cb=ls('hue-word-cb')===1;
+
+/* ---------- build UI ---------- */
+var board=$('#board'),tiles=[],rows=[];
+for(var r=0;r<ROWS;r++){var row=document.createElement('div');row.className='row';row.setAttribute('role','row');rows.push(row);tiles.push([]);for(var c=0;c<COLS;c++){var t=document.createElement('div');t.className='tile';t.setAttribute('role','gridcell');t.setAttribute('aria-label','empty');row.appendChild(t);tiles[r].push(t)}board.appendChild(row)}
+var KEYS=['qwertyuiop','asdfghjkl','+zxcvbnm-'],keyEl={};
+KEYS.forEach(function(k){var kr=document.createElement('div');kr.className='kr';k.split('').forEach(function(ch){var b=document.createElement('button');b.type='button';b.className='key';if(ch==='+'){b.textContent='Enter';b.classList.add('wide');b.dataset.k='Enter';b.setAttribute('aria-label','Enter')}else if(ch==='-'){b.textContent='⌫';b.classList.add('wide');b.dataset.k='Backspace';b.setAttribute('aria-label','Delete')}else{b.textContent=ch;b.dataset.k=ch;keyEl[ch]=b}b.addEventListener('click',function(){press(b.dataset.k)});kr.appendChild(b)});$('#kb').appendChild(kr)});
+
+/* ---------- helpers ---------- */
+var tt=null;
+function toast(m,ms){var t=$('#toast');t.textContent=m;t.classList.add('on');clearTimeout(tt);if(ms!==0)tt=setTimeout(function(){t.classList.remove('on')},ms||1400)}
+function score(g,a){var res=['no','no','no','no','no'],left={},i;for(i=0;i<5;i++){if(g[i]===a[i])res[i]='ok';else left[a[i]]=(left[a[i]]||0)+1}for(i=0;i<5;i++){if(res[i]==='ok')continue;if(left[g[i]]>0){res[i]='near';left[g[i]]--}}return res}
+var RANK={no:1,near:2,ok:3};
+function paintKeys(){var best={};guesses.forEach(function(g){var s=score(g,target);for(var i=0;i<5;i++){var l=g[i];if(!best[l]||RANK[s[i]]>RANK[best[l]])best[l]=s[i]}});for(var l in keyEl){if(best[l])keyEl[l].dataset.s=best[l];else keyEl[l].removeAttribute('data-s')}}
+function setTile(r,c,ch,state){var t=tiles[r][c];t.textContent=ch||'';if(state)t.dataset.s=state;else t.removeAttribute('data-s');t.setAttribute('aria-label',ch?('Letter '+ch.toUpperCase()+(state&&state!=='fill'?', '+({ok:'correct',near:'wrong place',no:'not in word'})[state]:'')):'empty')}
+function drawRow(r){var ch=cur;for(var c=0;c<COLS;c++)setTile(r,c,ch[c],ch[c]?'fill':null)}
+function reveal(r,g,instant,cb2){var s=score(g,target),done=0;for(var c=0;c<COLS;c++)(function(c){var apply=function(){setTile(r,c,g[c],s[c])};if(instant){apply();return}var t=tiles[r][c];setTimeout(function(){t.classList.add('flip');setTimeout(apply,250);setTimeout(function(){t.classList.remove('flip');if(++done===COLS&&cb2)cb2()},500)},c*280)})(c);if(instant&&cb2)cb2()}
+function reduced(){return window.matchMedia&&matchMedia('(prefers-reduced-motion:reduce)').matches}
+
+/* ---------- game flow ---------- */
+function reset(m){
+  mode=m;cur='';busy=false;
+  for(var r=0;r<ROWS;r++){for(var c=0;c<COLS;c++)setTile(r,c,'',null);rows[r].classList.remove('shake','bounce')}
+  if(m==='daily'){target=dailyWord;guesses=daily.guesses.slice();over=daily.done;won=daily.won}
+  else{target=ANSWERS[Math.floor(Math.random()*ANSWERS.length)];guesses=[];over=false;won=false}
+  guesses.forEach(function(g,i){reveal(i,g,true)});paintKeys();
+  [].forEach.call(document.querySelectorAll('#mode .pill'),function(b){b.setAttribute('aria-pressed',b.dataset.m===m)});
+  $('#toast').classList.remove('on');
+  if(over&&m==='daily')setTimeout(function(){openModal(false)},300);
+}
+function press(k){
+  if(over||busy||!$('#modal').hidden)return;
+  if(k==='Enter')return submit();
+  if(k==='Backspace'){if(cur){cur=cur.slice(0,-1);drawRow(guesses.length)}return}
+  if(/^[a-z]$/.test(k)&&cur.length<COLS){cur+=k;drawRow(guesses.length)}
+}
+function shake(r){var el=rows[r];el.classList.remove('shake');void el.offsetWidth;el.classList.add('shake')}
+function submit(){
+  var r=guesses.length;
+  if(cur.length<COLS){shake(r);toast('Not enough letters');return}
+  if(!VALID[cur]){shake(r);toast('Not in word list');return}
+  var g=cur;cur='';busy=true;guesses.push(g);
+  if(mode==='daily'){daily.guesses=guesses.slice();sv('hue-word-daily',daily)}
+  var finish=function(){
+    busy=false;paintKeys();
+    if(g===target){won=true;over=true;toast(WIN[Math.min(r,5)],1800);if(!reduced())rows[r].classList.add('bounce');end(true)}
+    else if(guesses.length===ROWS){over=true;toast(target.toUpperCase(),0);end(false)}
+  };
+  reveal(r,g,reduced(),finish);
+}
+function end(w){
+  if(mode==='daily'){
+    daily.done=true;daily.won=w;sv('hue-word-daily',daily);
+    stats.played++;
+    if(w){stats.wins++;stats.streak=(stats.lastWin===yest)?stats.streak+1:1;stats.lastWin=today;if(stats.streak>stats.max)stats.max=stats.streak;stats.dist[guesses.length-1]++}
+    else stats.streak=0;
+    sv('hue-word-stats',stats);
+  }
+  setTimeout(function(){openModal(true)},w?1500:1200);
+}
+
+/* ---------- modal / stats / share ---------- */
+var cdt=null;
+function liveStreak(){return(stats.lastWin===today||stats.lastWin===yest)?stats.streak:0}
+function openModal(justFinished){
+  var fin=over;
+  $('#mt').textContent=fin?(won?'You got it!':'Not this time'):'Stats';
+  $('#mans').hidden=!fin;$('#mans').textContent=fin?target:'';
+  $('#msub').textContent=fin?(won?'Solved in '+guesses.length+' of 6 guesses.':'The word was above. Come back for the next one!'):(mode==='practice'?'Practice games are not counted in your stats.':'Your daily record on this device.');
+  $('#s-p').textContent=stats.played;$('#s-w').textContent=stats.played?Math.round(stats.wins/stats.played*100):0;$('#s-s').textContent=liveStreak();$('#s-m').textContent=stats.max;
+  var mx=Math.max.apply(null,stats.dist.concat([1])),d=$('#dist');d.innerHTML='';
+  stats.dist.forEach(function(n,i){var row=document.createElement('div'),lab=document.createElement('span'),bar=document.createElement('i');lab.textContent=i+1;bar.textContent=n;bar.style.width=Math.max(8,n/mx*100)+'%';if(fin&&won&&mode==='daily'&&guesses.length===i+1)bar.className='hl';row.appendChild(lab);row.appendChild(bar);d.appendChild(row)});
+  $('#share').hidden=!fin;$('#newword').hidden=!(fin&&mode==='practice');
+  var nx=$('#next');nx.hidden=!(mode==='daily'&&fin);clearInterval(cdt);
+  if(!nx.hidden){var tick=function(){var n=new Date(),m=new Date(n.getFullYear(),n.getMonth(),n.getDate()+1),s=Math.max(0,Math.floor((m-n)/1000));if(s===0&&n.getTime()>now.getTime()+1000){location.reload();return}$('#cd').textContent=[Math.floor(s/3600),Math.floor(s%3600/60),s%60].map(function(x){return String(x).padStart(2,'0')}).join(':')};tick();cdt=setInterval(tick,1000)}
+  $('#modal').hidden=false;$('#mx').focus();
+}
+function closeModal(){$('#modal').hidden=true;clearInterval(cdt)}
+function shareText(){
+  var sq=cb?{ok:'🟧',near:'🟦',no:'⬛'}:{ok:'🟩',near:'🟨',no:'⬛'};
+  var head=mode==='daily'?'Hue Word #'+(dn+1)+' '+(won?guesses.length:'X')+'/6':'Hue Word practice '+(won?guesses.length:'X')+'/6';
+  var grid=guesses.map(function(g){return score(g,target).map(function(s){return sq[s]}).join('')}).join('\n');
+  return head+'\n\n'+grid+'\n\nhttps://huesudoku.com/word-guess.html'
+}
+function copy(t){
+  if(navigator.clipboard&&navigator.clipboard.writeText)return navigator.clipboard.writeText(t);
+  return new Promise(function(res,rej){var a=document.createElement('textarea');a.value=t;a.style.position='fixed';a.style.opacity='0';document.body.appendChild(a);a.select();try{document.execCommand('copy')?res():rej()}catch(e){rej(e)}document.body.removeChild(a)})
+}
+$('#share').onclick=function(){
+  var t=shareText(),b=this;
+  var done=function(){b.textContent='Copied!';setTimeout(function(){b.textContent='Share result'},1600)};
+  if(navigator.share&&/Mobi|Android/i.test(navigator.userAgent)){navigator.share({text:t}).catch(function(){})}
+  else copy(t).then(done,function(){b.textContent='Copy failed';setTimeout(function(){b.textContent='Share result'},1600)})
+};
+$('#newword').onclick=function(){closeModal();reset('practice')};
+$('#mx').onclick=closeModal;
+$('#modal').addEventListener('click',function(e){if(e.target===this)closeModal()});
+$('#statsbtn').onclick=function(){openModal(false)};
+[].forEach.call(document.querySelectorAll('#mode .pill'),function(b){b.onclick=function(){if(b.dataset.m===mode||busy)return;reset(b.dataset.m)}});
+function applyCb(){document.documentElement.dataset.cb=cb?'1':'0';$('#cb').setAttribute('aria-pressed',cb)}
+$('#cb').onclick=function(){cb=!cb;sv('hue-word-cb',cb?1:0);applyCb()};
+document.addEventListener('keydown',function(e){
+  if(e.key==='Escape'&&!$('#modal').hidden){closeModal();return}
+  if(e.ctrlKey||e.metaKey||e.altKey)return;
+  if(!$('#modal').hidden)return;
+  var k=e.key;
+  if(k==='Enter'){if(document.activeElement&&document.activeElement.tagName==='BUTTON'&&document.activeElement.classList.contains('key'))return;e.preventDefault();press('Enter')}
+  else if(k==='Backspace'){press('Backspace')}
+  else if(/^[a-zA-Z]$/.test(k)){press(k.toLowerCase())}
+});
+applyCb();reset('daily');
+document.querySelectorAll('ins.adsbygoogle').forEach(function(el){if(el.offsetParent===null)return;try{(window.adsbygoogle=window.adsbygoogle||[]).push({})}catch(e){}});
+})();
+</script><!-- Cloudflare Web Analytics --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "937d55df9d664d48a1ad148622c22bda"}'></script><!-- End Cloudflare Web Analytics -->
+</body></html>
