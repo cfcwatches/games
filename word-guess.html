@@ -25,6 +25,7 @@ h1{font:800 clamp(28px,6vw,38px)/1.1 'Bricolage Grotesque',system-ui,sans-serif;
 .tools .sp{flex:1}
 .seg{display:flex;gap:6px}
 .pill{border:1px solid var(--line);background:var(--panel);border-radius:999px;padding:7px 14px;font-weight:600;font-size:15px;color:var(--mute)}
+.pill[hidden]{display:none}
 .pill[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
 .stage{position:relative;background:var(--panel);border:1px solid var(--line);border-top:6px solid var(--accent);border-radius:22px;padding:18px 12px 14px;box-shadow:0 18px 50px -24px rgba(80,60,200,.5)}
 .toast{position:absolute;left:50%;top:10px;transform:translateX(-50%);background:var(--ink);color:var(--bg);font-weight:800;border-radius:12px;padding:8px 16px;z-index:5;pointer-events:none;white-space:nowrap;opacity:0;transition:opacity .15s}
@@ -86,13 +87,14 @@ footer{text-align:center;color:var(--mute);font-size:14px;padding:6px 0 28px}foo
 <meta property="og:image" content="https://huesudoku.com/og-image.png">
 <meta name="twitter:card" content="summary_large_image">
 </head><body><div class="wrap">
-<header><a class="logo" href="index.html">Hue Sudoku</a><nav><a href="index.html">All games</a><a href="sudoku.html">Sudoku</a><a href="maths-sprint.html">Maths Sprint</a><a href="quiz.html">Quiz</a><a href="word-guess.html" aria-current="page">Word Game</a></nav></header>
+<header><a class="logo" href="index.html">Hue Sudoku</a><nav><a href="index.html">All games</a><a href="sudoku.html">Sudoku</a><a href="kakuro.html">Kakuro</a><a href="maths-sprint.html">Maths Sprint</a><a href="quiz.html">Quiz</a><a href="word-guess.html" aria-current="page">Word Game</a><a href="memory-match.html">Memory</a></nav></header>
 <div class="adwrap adtop"><ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-7925282448688414" data-ad-slot="8192459900" data-ad-format="horizontal" data-full-width-responsive="true"></ins></div>
 <h1>Hue Word</h1>
 <p class="sub">Guess the five-letter word in six tries. A new word every day.</p>
 <div class="tools">
-<div class="seg" id="mode" role="group" aria-label="Game mode"><button type="button" class="pill" data-m="daily" aria-pressed="true">Daily</button><button type="button" class="pill" data-m="practice" aria-pressed="false">Practice</button></div>
+<div class="seg" id="mode" role="group" aria-label="Game mode"><button type="button" class="pill" data-m="daily" aria-pressed="true">Daily</button><button type="button" class="pill" data-m="practice" aria-pressed="false">Practice</button><button type="button" class="pill" data-m="yesterday" id="ybtn" aria-pressed="false" hidden>Yesterday</button></div>
 <span class="sp"></span>
+<button type="button" class="pill" id="hard" aria-pressed="false" title="Hints you reveal must be used in your next guesses">Hard mode</button>
 <button type="button" class="pill" id="cb" aria-pressed="false" title="Use orange and blue instead of green and amber">Colour-blind colours</button>
 <button type="button" class="pill" id="statsbtn">Stats</button>
 </div>
@@ -125,6 +127,8 @@ footer{text-align:center;color:var(--mute);font-size:14px;padding:6px 0 28px}foo
 <p><b>Grey:</b> the letter is not in the word at all. A letter can appear twice in the answer, and the colours take that into account.</p>
 <h2>Daily and practice modes</h2>
 <p>Daily mode gives everyone the same word, and it changes at midnight your time. Your streak and win record are saved on this device. Practice mode lets you play as many random words as you like and does not affect your stats.</p>
+<h2>Hard mode and yesterday’s word</h2>
+<p>Switch on Hard mode before your first guess and every hint you reveal must be used: green letters stay in place, and letters in the wrong place must appear in your next guess. From day two, the Yesterday button lets you play the previous day’s word if you missed it. It does not count towards your streak.</p>
 <h2>Tips for a good start</h2>
 <ul><li>Open with a word that uses common letters and different vowels, like STARE, ALONE or HOUSE.</li><li>Use your second guess to test new letters rather than repeating ones you already know.</li><li>Watch the keyboard: it remembers every letter you have ruled in or out.</li><li>Think about common endings and pairs, such as -ING, -ER, TH, SH and CH.</li></ul>
 <p>Prefer numbers? Try the <a href="sudoku.html">daily Sudoku</a> or the <a href="maths-sprint.html">Maths Sprint</a>.</p>
@@ -150,7 +154,7 @@ var dailyWord=ANSWERS[dn%ANSWERS.length];
 var mode='daily',target=dailyWord,guesses=[],cur='',over=false,won=false,busy=false;
 var daily=ls('hue-word-daily');if(!daily||daily.date!==today)daily={date:today,day:dn,guesses:[],done:false,won:false};
 var stats=ls('hue-word-stats')||{played:0,wins:0,streak:0,max:0,dist:[0,0,0,0,0,0],lastWin:null};
-var cb=ls('hue-word-cb')===1;
+var cb=ls('hue-word-cb')===1,hard=ls('hue-word-hard')===1,L=ANSWERS.length,yWord=dn>0?ANSWERS[(dn-1)%L]:null;
 
 /* ---------- build UI ---------- */
 var board=$('#board'),tiles=[],rows=[];
@@ -174,7 +178,8 @@ function reset(m){
   mode=m;cur='';busy=false;
   for(var r=0;r<ROWS;r++){for(var c=0;c<COLS;c++)setTile(r,c,'',null);rows[r].classList.remove('shake','bounce')}
   if(m==='daily'){target=dailyWord;guesses=daily.guesses.slice();over=daily.done;won=daily.won}
-  else{target=ANSWERS[Math.floor(Math.random()*ANSWERS.length)];guesses=[];over=false;won=false}
+  else if(m==='yesterday'){target=yWord;guesses=[];over=false;won=false}
+  else{target=ANSWERS[Math.floor(Math.random()*L)];guesses=[];over=false;won=false}
   guesses.forEach(function(g,i){reveal(i,g,true)});paintKeys();
   [].forEach.call(document.querySelectorAll('#mode .pill'),function(b){b.setAttribute('aria-pressed',b.dataset.m===m)});
   $('#toast').classList.remove('on');
@@ -186,11 +191,14 @@ function press(k){
   if(k==='Backspace'){if(cur){cur=cur.slice(0,-1);drawRow(guesses.length)}return}
   if(/^[a-z]$/.test(k)&&cur.length<COLS){cur+=k;drawRow(guesses.length)}
 }
+function ord(n){return['1st','2nd','3rd','4th','5th'][n]}
+function hardErr(g){for(var k=0;k<guesses.length;k++){var p=guesses[k],sc=score(p,target),need={},i;for(i=0;i<5;i++){if(sc[i]==='ok'&&g[i]!==p[i])return ord(i)+' letter must be '+p[i].toUpperCase();if(sc[i]!=='no')need[p[i]]=(need[p[i]]||0)+1}for(var l in need){if(g.split(l).length-1<need[l])return 'Guess must contain '+l.toUpperCase()}}return null}
 function shake(r){var el=rows[r];el.classList.remove('shake');void el.offsetWidth;el.classList.add('shake')}
 function submit(){
   var r=guesses.length;
   if(cur.length<COLS){shake(r);toast('Not enough letters');return}
   if(!VALID[cur]){shake(r);toast('Not in word list');return}
+  if(hard){var he=hardErr(cur);if(he){shake(r);toast(he,1800);return}}
   var g=cur;cur='';busy=true;guesses.push(g);
   if(mode==='daily'){daily.guesses=guesses.slice();sv('hue-word-daily',daily)}
   var finish=function(){
@@ -218,7 +226,7 @@ function openModal(justFinished){
   var fin=over;
   $('#mt').textContent=fin?(won?'You got it!':'Not this time'):'Stats';
   $('#mans').hidden=!fin;$('#mans').textContent=fin?target:'';
-  $('#msub').textContent=fin?(won?'Solved in '+guesses.length+' of 6 guesses.':'The word was above. Come back for the next one!'):(mode==='practice'?'Practice games are not counted in your stats.':'Your daily record on this device.');
+  $('#msub').textContent=fin?(won?'Solved in '+guesses.length+' of 6 guesses.':'The word was above. Come back for the next one!'):(mode==='daily'?'Your daily record on this device.':'Practice and replay games are not counted in your stats.');
   $('#s-p').textContent=stats.played;$('#s-w').textContent=stats.played?Math.round(stats.wins/stats.played*100):0;$('#s-s').textContent=liveStreak();$('#s-m').textContent=stats.max;
   var mx=Math.max.apply(null,stats.dist.concat([1])),d=$('#dist');d.innerHTML='';
   stats.dist.forEach(function(n,i){var row=document.createElement('div'),lab=document.createElement('span'),bar=document.createElement('i');lab.textContent=i+1;bar.textContent=n;bar.style.width=Math.max(8,n/mx*100)+'%';if(fin&&won&&mode==='daily'&&guesses.length===i+1)bar.className='hl';row.appendChild(lab);row.appendChild(bar);d.appendChild(row)});
@@ -230,7 +238,7 @@ function openModal(justFinished){
 function closeModal(){$('#modal').hidden=true;clearInterval(cdt)}
 function shareText(){
   var sq=cb?{ok:'🟧',near:'🟦',no:'⬛'}:{ok:'🟩',near:'🟨',no:'⬛'};
-  var head=mode==='daily'?'Hue Word #'+(dn+1)+' '+(won?guesses.length:'X')+'/6':'Hue Word practice '+(won?guesses.length:'X')+'/6';
+  var res=(won?guesses.length:'X')+'/6'+(hard?'*':''),head=mode==='daily'?'Hue Word #'+(dn+1)+' '+res:mode==='yesterday'?'Hue Word #'+dn+' (replay) '+res:'Hue Word practice '+res;
   var grid=guesses.map(function(g){return score(g,target).map(function(s){return sq[s]}).join('')}).join('\n');
   return head+'\n\n'+grid+'\n\nhttps://huesudoku.com/word-guess.html'
 }
@@ -249,6 +257,8 @@ $('#mx').onclick=closeModal;
 $('#modal').addEventListener('click',function(e){if(e.target===this)closeModal()});
 $('#statsbtn').onclick=function(){openModal(false)};
 [].forEach.call(document.querySelectorAll('#mode .pill'),function(b){b.onclick=function(){if(b.dataset.m===mode||busy)return;reset(b.dataset.m)}});
+function applyHard(){$('#hard').setAttribute('aria-pressed',hard)}
+$('#hard').onclick=function(){if(guesses.length>0&&!over){toast('Hard mode can only be changed before your first guess',2200);return}hard=!hard;sv('hue-word-hard',hard?1:0);applyHard();toast(hard?'Hard mode on: use every hint you find':'Hard mode off',1600)};
 function applyCb(){document.documentElement.dataset.cb=cb?'1':'0';$('#cb').setAttribute('aria-pressed',cb)}
 $('#cb').onclick=function(){cb=!cb;sv('hue-word-cb',cb?1:0);applyCb()};
 document.addEventListener('keydown',function(e){
@@ -260,7 +270,7 @@ document.addEventListener('keydown',function(e){
   else if(k==='Backspace'){press('Backspace')}
   else if(/^[a-zA-Z]$/.test(k)){press(k.toLowerCase())}
 });
-applyCb();reset('daily');
+applyCb();applyHard();if(yWord)$('#ybtn').hidden=false;reset('daily');
 document.querySelectorAll('ins.adsbygoogle').forEach(function(el){if(el.offsetParent===null)return;try{(window.adsbygoogle=window.adsbygoogle||[]).push({})}catch(e){}});
 })();
 </script><!-- Cloudflare Web Analytics --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "937d55df9d664d48a1ad148622c22bda"}'></script><!-- End Cloudflare Web Analytics -->

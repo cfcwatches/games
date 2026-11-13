@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Memory Match – free card matching game – Hue Sudoku</title>
+<meta name="description" content="Free memory card game. Flip the cards, find every matching pair in as few moves as you can. Three sizes and three themes, no sign-up needed.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;600;800&display=swap" rel="stylesheet">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7925282448688414" crossorigin="anonymous"></script>
+<style>
+:root{--bg:#f3effb;--panel:#fff;--ink:#241f3d;--mute:#5e5683;--line:#d6cdee;--accent:#6c4cf1;--dl:44%;--fl:92%;color-scheme:light}
+@media (prefers-color-scheme:dark){:root{--bg:#0f1127;--panel:#191c3a;--ink:#f1eeff;--mute:#a9a3d2;--line:#2f3466;--accent:#a592ff;--dl:68%;--fl:24%;color-scheme:dark}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.6 system-ui,sans-serif;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+.wrap{max-width:640px;margin:0 auto;padding:0 16px}
+header{padding:18px 0 6px;display:flex;flex-wrap:wrap;gap:10px 20px;align-items:center;justify-content:space-between}
+.logo{font:800 26px 'Bricolage Grotesque',system-ui,sans-serif;color:var(--ink);text-decoration:none;letter-spacing:-.02em}
+nav a{color:var(--mute);text-decoration:none;font-weight:600;font-size:15px;margin-right:14px}nav a[aria-current]{color:var(--accent)}
+button{font:inherit;color:inherit;cursor:pointer;touch-action:manipulation}
+button:focus-visible,a:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+h1{font:800 clamp(28px,6vw,38px)/1.1 'Bricolage Grotesque',system-ui,sans-serif;letter-spacing:-.02em;margin:14px 0 4px}
+.sub{color:var(--mute);margin:0 0 14px}
+.seg{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
+.seg button{border:1px solid var(--line);background:var(--panel);border-radius:999px;padding:7px 14px;font-weight:600;font-size:15px;color:var(--mute)}
+.seg button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:14px 0 12px}
+.stat{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:8px 10px;text-align:center;font-size:13px;color:var(--mute);font-weight:600}
+.stat b{display:block;font:800 24px 'Bricolage Grotesque',system-ui,sans-serif;color:var(--ink);font-variant-numeric:tabular-nums}
+.stage{position:relative;background:var(--panel);border:1px solid var(--line);border-top:6px solid var(--accent);border-radius:22px;padding:14px;box-shadow:0 18px 50px -24px rgba(80,60,200,.5)}
+.grid{display:grid;grid-template-columns:repeat(var(--cols),1fr);gap:8px;max-width:var(--maxw,520px);margin:0 auto}
+.card{position:relative;aspect-ratio:1;border:0;padding:0;background:none;perspective:600px;border-radius:12px}
+.in{position:absolute;inset:0;transform-style:preserve-3d;transition:transform .35s}
+.card[data-s="up"] .in,.card[data-s="done"] .in{transform:rotateY(180deg)}
+.f{position:absolute;inset:0;border-radius:12px;display:flex;align-items:center;justify-content:center;backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.back{background:var(--accent);color:#fff;font:800 clamp(18px,5vw,28px) 'Bricolage Grotesque',system-ui,sans-serif;opacity:.92}
+.front{transform:rotateY(180deg);background:hsl(var(--h) 80% var(--fl));border:2px solid hsl(var(--h) 70% 55%);font-size:clamp(24px,7vw,40px);line-height:1}
+.card[data-s="done"] .front{border-color:hsl(var(--h) 78% 45%);box-shadow:0 0 0 3px hsl(var(--h) 80% 55%/.35)}
+.card:disabled{cursor:default}
+.cover{position:absolute;inset:0;border-radius:inherit;background:color-mix(in srgb,var(--panel) 94%,transparent);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:16px;text-align:center;z-index:3}
+.cover[hidden]{display:none}
+.cover h2{font:800 30px 'Bricolage Grotesque',system-ui,sans-serif;margin:0}
+.big{font:800 54px 'Bricolage Grotesque',system-ui,sans-serif;color:var(--accent)}
+.cover p{margin:0;color:var(--mute)}
+.btn{background:var(--accent);color:#fff;border:0;border-radius:14px;padding:12px 26px;font-weight:800;font-size:17px}
+.ghost{background:none;border:1px solid var(--line);color:var(--mute);border-radius:12px;padding:8px 14px;font-weight:600}
+.row{display:flex;gap:8px;justify-content:center;margin-top:12px}
+.adwrap{text-align:center}.adtop{max-width:728px;margin:6px auto;min-height:50px}.adfoot{max-width:728px;margin:48px auto 20px;min-height:50px}
+article{background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:6px 22px 18px;margin:34px 0 10px}
+article h2{font:800 21px 'Bricolage Grotesque',system-ui,sans-serif;margin:20px 0 4px}article p,article li{color:var(--ink)}
+a{color:var(--accent)}
+footer{text-align:center;color:var(--mute);font-size:14px;padding:6px 0 28px}footer a{font-weight:600;text-decoration:none;margin:0 8px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style><link rel="icon" href="favicon.ico" sizes="48x48">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="canonical" href="https://huesudoku.com/memory-match.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Hue Sudoku">
+<meta property="og:title" content="Memory Match – free card matching game – Hue Sudoku">
+<meta property="og:description" content="Free memory card game. Flip the cards, find every matching pair in as few moves as you can. Three sizes and three themes, no sign-up needed.">
+<meta property="og:url" content="https://huesudoku.com/memory-match.html">
+<meta property="og:image" content="https://huesudoku.com/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+</head><body><div class="wrap">
+<header><a class="logo" href="index.html">Hue Sudoku</a><nav><a href="index.html">All games</a><a href="sudoku.html">Sudoku</a><a href="kakuro.html">Kakuro</a><a href="maths-sprint.html">Maths Sprint</a><a href="quiz.html">Quiz</a><a href="word-guess.html">Word Game</a><a href="memory-match.html" aria-current="page">Memory</a></nav></header>
+<div class="adwrap adtop"><ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-7925282448688414" data-ad-slot="8192459900" data-ad-format="horizontal" data-full-width-responsive="true"></ins></div>
+<h1>Memory Match</h1>
+<p class="sub">Flip two cards at a time and find every matching pair in as few moves as you can.</p>
+<div class="seg" id="diff" role="group" aria-label="Size"></div>
+<div class="seg" id="theme" role="group" aria-label="Theme"></div>
+<div class="stats"><div class="stat">Moves<b id="moves">0</b></div><div class="stat">Pairs<b id="pairs">0</b></div><div class="stat">Time<b id="time">0:00</b></div></div>
+<div class="stage">
+<div class="grid" id="grid" role="group" aria-label="Cards"></div>
+<div class="row"><button class="ghost" id="restart">New game</button></div>
+<div class="cover" id="start"><h2>Memory Match</h2><p id="best">&nbsp;</p><button class="btn" id="go">Start</button></div>
+<div class="cover" id="end" hidden><h2>All pairs found!</h2><div class="big" id="fm">0</div><p id="fd"></p><p id="fb"></p><button class="btn" id="again">Play again</button></div>
+</div>
+<article>
+<h2>How to play</h2>
+<p>Pick a size and a theme, then press Start. Tap a card to turn it over, then tap a second card. If they match they stay face up. If not, they flip back, so remember where they were. Clear the board in as few moves as you can: each pair of flips counts as one move.</p>
+<h2>Why memory games are good for you</h2>
+<p>Matching games exercise short-term visual memory and attention. The trick is to build a mental map: note the position of every card you flip, even the ones that do not match, and use them on later turns.</p>
+<ul><li>Start in a corner and work across the board, so you have a system for the cards you have not seen yet.</li><li>When you flip a card you have already seen, go straight to its partner.</li><li>Group cards by position in your head, such as top row, left side, centre.</li></ul>
+<p>Want to stretch your brain a different way? Try the <a href="word-guess.html">daily Hue Word</a> or a <a href="sudoku.html">Sudoku puzzle</a>.</p>
+</article>
+<div class="adwrap adfoot"><ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-7925282448688414" data-ad-slot="5056140614" data-ad-format="auto" data-full-width-responsive="true"></ins></div>
+<footer><a href="index.html">All games</a><a href="sudoku.html">Sudoku</a><a href="how-to-play.html">How to play Sudoku</a><a href="about.html">About</a><a href="privacy.html">Privacy policy</a><br>© 2026 Hue Sudoku. All rights reserved.</footer>
+</div>
+<script>
+(function(){
+var $=function(s){return document.querySelector(s)};
+var DIFFS=[['easy','Easy · 6 pairs',{p:6,c:4,w:'340px'}],['medium','Medium · 8 pairs',{p:8,c:4,w:'400px'}],['hard','Hard · 12 pairs',{p:12,c:6,w:'520px'}]];
+var THEMES=[['animals','Animals',['🐶','🐱','🦊','🐼','🐸','🦁','🐙','🦋','🐢','🐧','🦉','🐝']],['food','Food',['🍎','🍌','🍇','🍓','🍕','🍩','🌮','🍒','🥑','🍉','🍪','🥕']],['space','Space',['🚀','🌍','🌙','⭐','🪐','👽','🌞','🔭','🛸','☄️','🌠','🛰️']]];
+var diff='easy',theme='animals',cards=[],open=[],moves=0,found=0,lock=false,t0=0,tick=null,playing=false;
+function ls(k){try{return JSON.parse(localStorage.getItem(k)||'{}')||{}}catch(e){return{}}}
+function sv(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+function D(){return DIFFS.filter(function(d){return d[0]===diff})[0][2]}
+function mmss(n){return Math.floor(n/60)+':'+String(n%60).padStart(2,'0')}
+function seg(id,list,get,set){var el=$(id);el.innerHTML='';list.forEach(function(x){var b=document.createElement('button');b.type='button';b.textContent=x[1];b.setAttribute('aria-pressed',get()===x[0]);b.onclick=function(){set(x[0]);[].forEach.call(el.children,function(c){c.setAttribute('aria-pressed',c===b)});build();showBest()};el.appendChild(b)})}
+seg('#diff',DIFFS,function(){return diff},function(v){diff=v});
+seg('#theme',THEMES,function(){return theme},function(v){theme=v});
+function showBest(){var b=ls('hue-memory-best')[diff];$('#best').textContent=b?'Your best: '+b.moves+' moves in '+mmss(b.time):'No score yet. Set one!'}
+function shuffle(a){for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)),t=a[i];a[i]=a[j];a[j]=t}return a}
+function stop(){clearInterval(tick);tick=null}
+function build(){
+  stop();playing=false;lock=false;open=[];moves=0;found=0;$('#start').hidden=false;$('#end').hidden=true;
+  var d=D(),sym=THEMES.filter(function(t){return t[0]===theme})[0][2].slice(0,d.p),g=$('#grid');
+  var deck=[];sym.forEach(function(s,i){deck.push({s:s,id:i},{s:s,id:i})});shuffle(deck);
+  g.style.setProperty('--cols',d.c);g.style.setProperty('--maxw',d.w);g.innerHTML='';cards=[];
+  deck.forEach(function(c,i){
+    var b=document.createElement('button');b.type='button';b.className='card';b.dataset.s='down';b.disabled=true;b.style.setProperty('--h',Math.round(c.id*360/d.p));
+    b.setAttribute('aria-label','Card '+(i+1)+', face down');
+    b.innerHTML='<div class="in"><span class="f back" aria-hidden="true">?</span><span class="f front" aria-hidden="true">'+c.s+'</span></div>';
+    b.onclick=function(){flip(i)};g.appendChild(b);cards.push({el:b,id:c.id,s:c.s,state:'down'})});
+  $('#moves').textContent=0;$('#pairs').textContent='0/'+d.p;$('#time').textContent='0:00';
+}
+function label(c,i){var st=c.state;c.el.setAttribute('aria-label','Card '+(i+1)+', '+(st==='down'?'face down':c.s+(st==='done'?', matched':'')))}
+function set(i,st){var c=cards[i];c.state=st;c.el.dataset.s=st==='done'?'done':st==='up'?'up':'down';label(c,i);c.el.setAttribute('aria-pressed',st==='up')}
+function flip(i){
+  if(!playing||lock)return;var c=cards[i];if(c.state!=='down')return;
+  if(!t0){t0=performance.now();tick=setInterval(function(){$('#time').textContent=mmss(Math.floor((performance.now()-t0)/1000))},250)}
+  set(i,'up');open.push(i);
+  if(open.length===2){
+    moves++;$('#moves').textContent=moves;var a=open[0],b=open[1];open=[];
+    if(cards[a].id===cards[b].id){set(a,'done');set(b,'done');cards[a].el.disabled=cards[b].el.disabled=true;found++;$('#pairs').textContent=found+'/'+D().p;if(found===D().p)setTimeout(win,500)}
+    else{lock=true;setTimeout(function(){set(a,'down');set(b,'down');lock=false},850)}
+  }
+}
+function win(){
+  stop();playing=false;var secs=Math.floor((performance.now()-t0)/1000),all=ls('hue-memory-best'),p=all[diff],msg;
+  if(!p||moves<p.moves||(moves===p.moves&&secs<p.time)){all[diff]={moves:moves,time:secs};sv('hue-memory-best',all);msg=p?'New personal best!':'First score on this size!'}else msg='Your best here is '+p.moves+' moves.';
+  $('#fm').textContent=moves+' moves';$('#fd').textContent='Cleared in '+mmss(secs);$('#fb').textContent=msg;$('#end').hidden=false;showBest()}
+function start(){
+  build();t0=0;playing=true;$('#start').hidden=true;$('#end').hidden=true;
+  cards.forEach(function(c){c.el.disabled=false});
+}
+$('#go').onclick=start;$('#again').onclick=start;$('#restart').onclick=function(){if(playing||!$('#end').hidden)start();else build()};
+build();showBest();
+document.querySelectorAll('ins.adsbygoogle').forEach(function(el){if(el.offsetParent===null)return;try{(window.adsbygoogle=window.adsbygoogle||[]).push({})}catch(e){}});
+})();
+</script><!-- Cloudflare Web Analytics --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "937d55df9d664d48a1ad148622c22bda"}'></script><!-- End Cloudflare Web Analytics -->
+</body></html>
