@@ -99,7 +99,7 @@ header>nav a:hover,header>nav a[aria-current]{color:var(--accent)}
 header .logo{order:1}header>nav{order:2}header .levels{order:4}
 @media (min-width:701px){header>nav{margin-left:auto}header::after{content:"";order:3;flex-basis:100%;height:0}header .levels{margin:0 auto}}
 @media (max-width:700px){body header.mm{flex-wrap:wrap}header.mm .mbtn{order:2}header.mm .levels{flex:1 1 100%}header.mm>nav a{margin:0}header.mm>nav{left:16px;right:16px}}
-</style></head>
+.hubnext{font-size:14px;color:var(--mute);margin:14px 0 4px;border-top:1px solid var(--line);padding-top:10px;line-height:1.5}.hubnext[hidden]{display:none}.hubnext a{color:var(--accent);font-weight:700}.hubnext b{color:var(--ink)}</style></head>
 <body>
 <header>
   <h1 class="logo"><span class="dots" aria-hidden="true"><i class="h1"></i><i class="h2"></i><i class="h3"></i><i class="h4"></i><i class="h5"></i><i class="h6"></i><i class="h7"></i><i class="h8"></i><i class="h9"></i></span>Hue Sudoku</h1>
@@ -111,7 +111,7 @@ header .logo{order:1}header>nav{order:2}header .levels{order:4}
     <button role="tab" data-l="daily" aria-selected="false">Daily</button>
   </div>
   <nav><a href="index.html">All games</a><a href="sudoku.html" aria-current="page">Sudoku</a><a href="kakuro.html">Kakuro</a><a href="maths-sprint.html">Maths Sprint</a><a href="quiz.html">Quiz</a><a href="word-guess.html">Word Game</a><a href="memory-match.html">Memory</a></nav>
-</header><script src="menu.js"></script>
+</header><script src="menu.js"></script><script src="hub.js"></script>
 
 <!-- AD SLOT: top leaderboard. Replace this div with your AdSense <ins class="adsbygoogle"> block. -->
 <div class="adwrap adtop"><ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-7925282448688414" data-ad-slot="8192459900" data-ad-format="horizontal" data-full-width-responsive="true"></ins></div>
@@ -162,6 +162,7 @@ header .logo{order:1}header>nav{order:2}header .levels{order:4}
     <p id="winSub">Nicely done.</p>
     <div class="big" id="winTime">00:00</div>
     <p id="winBest"></p>
+    <p class="hubnext" id="hubNext" hidden></p>
     <button class="primary" id="again">Play another</button>
   </div>
 </div>
@@ -296,11 +297,12 @@ function check(){
       const y=new Date();y.setDate(y.getDate()-1);
       d.streak=d.last===ds(y)?(d.streak||0)+1:1;d.last=td;d.best=Math.max(d.best||0,d.streak);
       const ks=Object.keys(d.done).sort();while(ks.length>30)delete d.done[ks.shift()];
-      setDaily(d);msg='Daily streak: '+d.streak+' day'+(d.streak===1?'':'s')+'. See you tomorrow!';
+      setDaily(d);if(window.HueHub)HueHub.done('sudoku');msg='Daily streak: '+d.streak+' day'+(d.streak===1?'':'s')+'. See you tomorrow!';
     }else msg='That daily puzzle has already been counted.';
   }else if(b[diff]==null||t<b[diff]){msg=b[diff]==null?'First '+diff+' win. That’s your time to beat.':'New personal best!';b[diff]=t;saveBest(b)}
   else msg='Your best on '+diff+' is '+fmt(b[diff])+'.';
   $('#winTime').textContent=fmt(t);$('#winBest').textContent=msg;
+  {const hn=$('#hubNext');if(window.HueHub&&daily)HueHub.render(hn,'sudoku');else hn.hidden=true}
   $('#winSub').textContent=(daily?'Daily ':'')+diff[0].toUpperCase()+diff.slice(1)+' puzzle, '+mist+(mist===1?' mistake':' mistakes');
   showBest();confetti();setTimeout(()=>{$('#win').classList.add('on');$('#again').focus()},700)}
 
