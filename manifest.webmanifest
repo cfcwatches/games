@@ -1,0 +1,24 @@
+{
+  "name": "Hue Sudoku – Free Puzzle Games",
+  "short_name": "Hue Sudoku",
+  "description": "Colourful Sudoku, Kakuro, a daily word game, memory cards, maths and quizzes. Free, no sign-up.",
+  "id": "/",
+  "start_url": "/?source=pwa",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#f3effb",
+  "theme_color": "#6c4cf1",
+  "categories": ["games", "puzzle", "education"],
+  "lang": "en-GB",
+  "icons": [
+    {"src": "/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any"},
+    {"src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any"},
+    {"src": "/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable"}
+  ],
+  "shortcuts": [
+    {"name": "Daily Sudoku", "short_name": "Sudoku", "url": "/sudoku.html?daily=1", "icons": [{"src": "/icon-192.png", "sizes": "192x192"}]},
+    {"name": "Daily Kakuro", "short_name": "Kakuro", "url": "/kakuro.html", "icons": [{"src": "/icon-192.png", "sizes": "192x192"}]},
+    {"name": "Hue Word", "short_name": "Hue Word", "url": "/word-guess.html", "icons": [{"src": "/icon-192.png", "sizes": "192x192"}]}
+  ]
+}
