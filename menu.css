@@ -1,5 +1,11 @@
 /* Adaptive menu: when the header links do not fit on one row, menu.js adds .mm-on and they collapse into a Menu button. */
 .mbtn{display:none}
+/* Same header on every page: identical width, logo and link spacing, whatever the page column is. */
+header.mm{--hw:min(900px,calc(100vw - 32px));width:var(--hw);max-width:none;margin-left:calc(50% - var(--hw) / 2);margin-right:0;padding-left:0;padding-right:0;box-sizing:border-box;position:relative;z-index:50}
+header.mm .logo{display:flex;align-items:center;gap:10px;font:800 26px 'Bricolage Grotesque',system-ui,sans-serif;color:var(--ink);text-decoration:none;letter-spacing:-.02em;margin:0}
+header.mm .logo .dots{display:grid;grid-template-columns:repeat(3,9px);gap:3px}
+header.mm .logo .dots i{width:9px;height:9px;border-radius:50%;background:hsl(var(--h) 80% 55%)}
+header.mm nav a{margin-right:12px}
 header.mm-on{position:relative;flex-wrap:nowrap;align-items:center;justify-content:space-between;gap:12px}
 header.mm-on .logo{min-width:0}
 header.mm-on .mbtn{display:inline-flex;align-items:center;gap:8px;flex:none;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:999px;padding:8px 14px;font:600 15px/1 system-ui,sans-serif;cursor:pointer;touch-action:manipulation}
