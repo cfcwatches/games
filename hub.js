@@ -6,14 +6,15 @@
   var GAMES=[
     {id:'sudoku',name:'Sudoku',href:'sudoku.html?daily=1'},
     {id:'kakuro',name:'Kakuro',href:'kakuro.html'},
-    {id:'word',name:'Hue Word',href:'word-guess.html'}
+    {id:'word',name:'Hue Word',href:'word-guess.html'},
+    {id:'shift',name:'Hue Shift',href:'hue-shift.html'}
   ];
   function get(k){try{return JSON.parse(localStorage.getItem(k)||'null')}catch(e){return null}}
   function ds(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
   function today(){return ds(new Date())}
   function snapshot(){
-    var hub=get(K)||{},sd=get('hue-daily')||{},kd=get('hue-kakuro-daily'),wd=get('hue-word-daily');
-    return {hub:hub,days:hub.days||{},sudoku:sd.done||{},kakuroDay:kd&&kd.date,wordDay:wd&&wd.done?wd.date:null};
+    var hub=get(K)||{},sd=get('hue-daily')||{},kd=get('hue-kakuro-daily'),wd=get('hue-word-daily'),hd=get('hue-shift-daily');
+    return {hub:hub,days:hub.days||{},sudoku:sd.done||{},kakuroDay:kd&&kd.date,wordDay:wd&&wd.done?wd.date:null,shiftDay:hd&&hd.date};
   }
   function doneOn(s,day){
     var a=(s.days[day]||[]).slice();
@@ -21,6 +22,7 @@
     if(s.sudoku[day])add('sudoku');
     if(s.kakuroDay===day)add('kakuro');
     if(s.wordDay===day)add('word');
+    if(s.shiftDay===day)add('shift');
     return a;
   }
   function streakFrom(s){

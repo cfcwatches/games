@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Hue Shift – free colour gradient puzzle game – Hue Sudoku</title>
+<meta name="description" content="Hue Shift is a relaxing colour puzzle. Swap the scrambled tiles back into a smooth gradient in as few moves as you can. Daily puzzle, three sizes, free and no sign-up.">
+<script src="consent.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f3effb;--panel:#fff;--ink:#241f3d;--mute:#5e5683;--line:#d6cdee;--accent:#6c4cf1;--ok:#13a05a;color-scheme:light}
+@media (prefers-color-scheme:dark){:root{--bg:#0f1127;--panel:#191c3a;--ink:#f1eeff;--mute:#a9a3d2;--line:#2f3466;--accent:#a592ff;--ok:#3ddc8a;color-scheme:dark}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.6 system-ui,sans-serif;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+.wrap{max-width:600px;margin:0 auto;padding:0 16px}
+header{padding:18px 0 6px;display:flex;flex-wrap:wrap;gap:10px 20px;align-items:center;justify-content:space-between}
+.logo{font:800 26px 'Bricolage Grotesque',system-ui,sans-serif;color:var(--ink);text-decoration:none;letter-spacing:-.02em}
+nav a{color:var(--mute);text-decoration:none;font-weight:600;font-size:15px;margin-right:14px}nav a[aria-current]{color:var(--accent)}
+button{font:inherit;color:inherit;cursor:pointer;touch-action:manipulation}
+button:focus-visible,a:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+h1{font:800 clamp(28px,6vw,38px)/1.1 'Bricolage Grotesque',system-ui,sans-serif;letter-spacing:-.02em;margin:14px 0 4px}
+.sub{color:var(--mute);margin:0 0 10px}
+.seg{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
+.seg button{border:1px solid var(--line);background:var(--panel);border-radius:999px;padding:7px 14px;font-weight:600;font-size:15px;color:var(--mute)}
+.seg button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0}
+.stat{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:8px 10px;text-align:center;font-size:13px;color:var(--mute);font-weight:600}
+.stat b{display:block;font:800 24px 'Bricolage Grotesque',system-ui,sans-serif;color:var(--ink);font-variant-numeric:tabular-nums}
+.stage{position:relative;background:var(--panel);border:1px solid var(--line);border-top:6px solid var(--accent);border-radius:22px;padding:12px;box-shadow:0 18px 50px -24px rgba(80,60,200,.5)}
+.board{display:grid;grid-template-columns:repeat(var(--c),1fr);gap:2px;width:min(100%,calc(var(--c)*68px));margin:0 auto;user-select:none;-webkit-user-select:none;touch-action:manipulation}
+.t{position:relative;aspect-ratio:1;border:0;padding:0;border-radius:6px;transition:transform .12s,box-shadow .12s;color:#fff;font:800 18px/1 system-ui,sans-serif}
+.t.fx::after{content:"";position:absolute;left:50%;top:50%;width:9px;height:9px;margin:-4.5px 0 0 -4.5px;border-radius:50%;background:rgba(255,255,255,.95);box-shadow:0 0 0 1.5px rgba(0,0,0,.4)}
+.t.sel{transform:scale(.86);box-shadow:0 0 0 4px var(--ink);z-index:2}
+.t.mk::before{content:"✓";position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-shadow:0 0 3px rgba(0,0,0,.7)}
+.t.shake{animation:shake .3s}
+.t.pop{animation:pop .22s}
+@keyframes shake{25%,75%{transform:translateX(-3px)}50%{transform:translateX(3px)}}
+@keyframes pop{50%{transform:scale(1.12)}}
+.tools{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;max-width:420px;margin:12px auto 0}
+.tools button{border:1px solid var(--line);background:var(--panel);border-radius:10px;padding:9px 4px;font-weight:600;font-size:14px;color:var(--mute)}
+.toast{position:absolute;left:50%;top:8px;transform:translateX(-50%);background:var(--ink);color:var(--bg);font-weight:800;font-size:15px;border-radius:12px;padding:6px 14px;z-index:6;pointer-events:none;white-space:nowrap;opacity:0;transition:opacity .15s}.toast.on{opacity:1}
+.cover{position:absolute;inset:0;border-radius:inherit;background:color-mix(in srgb,var(--panel) 95%,transparent);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:16px;text-align:center;z-index:5}
+.cover[hidden]{display:none}
+.cover h2{font:800 30px 'Bricolage Grotesque',system-ui,sans-serif;margin:0}.cover p{margin:0;color:var(--mute)}
+.big{font:800 52px 'Bricolage Grotesque',system-ui,sans-serif;color:var(--accent);font-variant-numeric:tabular-nums}
+.strip{width:min(260px,70%);height:14px;border-radius:99px;margin:4px 0}
+.btn{background:var(--accent);color:#fff;border:0;border-radius:14px;padding:12px 26px;font-weight:800;font-size:17px;margin:4px}
+.ghost{background:none;border:1px solid var(--line);color:var(--mute);border-radius:12px;padding:10px 16px;font-weight:600;margin:4px}
+.hubnext{font-size:14px;color:var(--mute);margin:10px 0 4px;border-top:1px solid var(--line);padding-top:10px;line-height:1.5}.hubnext[hidden]{display:none}.hubnext a{color:var(--accent);font-weight:700}.hubnext b{color:var(--ink)}
+.adwrap{text-align:center}.adtop{max-width:728px;margin:6px auto;min-height:50px}.adfoot{max-width:728px;margin:48px auto 20px;min-height:50px}
+article{background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:6px 22px 18px;margin:34px 0 10px}
+article h2{font:800 21px 'Bricolage Grotesque',system-ui,sans-serif;margin:20px 0 4px}
+a{color:var(--accent)}
+footer{text-align:center;color:var(--mute);font-size:14px;padding:6px 0 28px}footer a{font-weight:600;text-decoration:none;margin:0 8px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style><link rel="icon" href="favicon.ico" sizes="48x48">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="canonical" href="https://huesudoku.com/hue-shift.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Hue Sudoku">
+<meta property="og:title" content="Hue Shift – free colour gradient puzzle game – Hue Sudoku">
+<meta property="og:description" content="Swap the scrambled tiles back into a smooth gradient in as few moves as you can. Daily puzzle, three sizes, free and no sign-up.">
+<meta property="og:url" content="https://huesudoku.com/hue-shift.html">
+<meta property="og:image" content="https://huesudoku.com/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="menu.css"><link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#f3effb" media="(prefers-color-scheme: light)"><meta name="theme-color" content="#0f1127" media="(prefers-color-scheme: dark)"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Hue Sudoku"><meta name="apple-mobile-web-app-status-bar-style" content="default"></head><body><div class="wrap">
+<header><a class="logo" href="index.html">Hue Sudoku</a><nav><a href="index.html">All games</a><a href="sudoku.html">Sudoku</a><a href="kakuro.html">Kakuro</a><a href="maths-sprint.html">Maths Sprint</a><a href="quiz.html">Quiz</a><a href="word-guess.html">Word Game</a><a href="memory-match.html">Memory</a><a href="hue-shift.html" aria-current="page">Hue Shift</a></nav></header><script src="menu.js"></script>
+<div class="adwrap adtop"><ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-7925282448688414" data-ad-slot="8192459900" data-ad-format="horizontal" data-full-width-responsive="true"></ins></div>
+<h1>Hue Shift</h1>
+<p class="sub">Swap the tiles to rebuild the smooth colour gradient. Tiles with a dot are locked in place.</p>
+<div class="seg" id="modes" role="group" aria-label="Puzzle"></div>
+<div class="stats"><div class="stat">Moves<b id="moves">0</b></div><div class="stat">In place<b id="inplace">0</b></div><div class="stat">Time<b id="time">0:00</b></div></div>
+<div class="stage">
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<div class="board" id="board" role="grid" aria-label="Colour tiles"></div>
+<div class="tools"><button id="peek">Check</button><button id="hint">Hint</button><button id="reset">New puzzle</button></div>
+<div class="cover" id="win" hidden><h2>Gradient restored!</h2><div class="strip" id="strip" aria-hidden="true"></div><div class="big" id="wm">0</div><p id="wd"></p><p id="wb"></p><p class="hubnext" id="hubnext" hidden></p><div><button class="btn" id="share">Share result</button><button class="ghost" id="next">Next puzzle</button></div></div>
+</div>
+<article>
+<h2>How to play Hue Shift</h2>
+<p>The board starts as a scrambled version of a smooth colour gradient. Tap a tile, then tap another tile to swap them. Put every tile back in its right place to rebuild the gradient. Tiles marked with a white dot are already correct and cannot be moved, so use them as anchors.</p>
+<p>You can try to finish in as few moves as possible, or as fast as possible. Your best result is saved for each size. Hints and the Check button are there if you get stuck, but a game with hints does not set a best score.</p>
+<h2>Modes</h2>
+<p><b>Daily</b> gives everyone the same puzzle, and it changes at midnight. Finishing it counts towards your daily streak on the homepage. <b>Easy</b>, <b>Medium</b> and <b>Hard</b> give you a fresh random puzzle every time, with a bigger grid at each step.</p>
+<h2>Tips</h2>
+<ul><li>Start with the four corners and work along the edges. The locked tiles tell you the colours at the ends of each row and column.</li><li>Look for the lightest and darkest tiles first. They sit in different corners and are easy to place.</li><li>Fill one row at a time. Neighbouring tiles should look like small steps along the same colour line.</li><li>Use Check to see which tiles are already right, so you do not undo them by mistake.</li></ul>
+<p>Looking for a different challenge? Try <a href="memory-match.html">Memory Match</a> or the <a href="word-guess.html">daily Hue Word</a>.</p>
+</article>
+<div class="adwrap adfoot"><ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-7925282448688414" data-ad-slot="5056140614" data-ad-format="auto" data-full-width-responsive="true"></ins></div>
+<footer><a href="index.html">All games</a><a href="sudoku.html">Sudoku</a><a href="how-to-play.html">How to play Sudoku</a><a href="about.html">About</a><a href="privacy.html">Privacy policy</a><br>© 2026 Hue Sudoku. All rights reserved.</footer>
+</div>
+<script src="hub.js"></script>
+<script>
+(function(){
+var $=function(s){return document.querySelector(s)};
+var SIZES={easy:{c:5,r:7,fix:'mids',n:'Easy'},medium:{c:6,r:8,fix:'corners',n:'Medium'},hard:{c:7,r:10,fix:'corners',n:'Hard'}};
+var MODES=[['daily','Daily'],['easy','Easy'],['medium','Medium'],['hard','Hard']];
+var LAUNCH=Date.UTC(2026,10,13);
+function ls(k){try{return JSON.parse(localStorage.getItem(k)||'null')}catch(e){return null}}
+function sv(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+function ds(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
+function mmss(n){return Math.floor(n/60)+':'+String(n%60).padStart(2,'0')}
+var now=new Date(),today=ds(now),dayNo=Math.max(0,Math.round((Date.UTC(now.getFullYear(),now.getMonth(),now.getDate())-LAUNCH)/864e5))+1;
+
+/* ---- seeded random + colour maths (OKLab for smooth, even gradients) ---- */
+function rng(seed){var a=seed>>>0;return function(){a=(a+0x6D2B79F5)>>>0;var t=a;t=Math.imul(t^(t>>>15),t|1);t^=t+Math.imul(t^(t>>>7),t|61);return((t^(t>>>14))>>>0)/4294967296}}
+function hash(str){var h=2166136261;for(var i=0;i<str.length;i++){h^=str.charCodeAt(i);h=Math.imul(h,16777619)}return h>>>0}
+function lin(L,a,b){var l_=L+0.3963377774*a+0.2158037573*b,m_=L-0.1055613458*a-0.0638541728*b,s_=L-0.0894841775*a-1.2914855480*b,l=l_*l_*l_,m=m_*m_*m_,s=s_*s_*s_;
+  return[4.0767416621*l-3.3077115913*m+0.2309699292*s,-1.2684380046*l+2.6097574011*m-0.3413193965*s,-0.0041960863*l-0.7034186147*m+1.7076147010*s]}
+function inGamut(v){return v.every(function(x){return x>=-0.001&&x<=1.001})}
+function gam(x){x=Math.max(0,Math.min(1,x));return x<=0.0031308?12.92*x:1.055*Math.pow(x,1/2.4)-0.055}
+function css(L,a,b){var v=lin(L,a,b);return'rgb('+Math.round(gam(v[0])*255)+','+Math.round(gam(v[1])*255)+','+Math.round(gam(v[2])*255)+')'}
+function corner(L,h,rand){var C=0.15+rand()*0.07,r=h*Math.PI/180;while(C>0.02&&!inGamut(lin(L,C*Math.cos(r),C*Math.sin(r))))C-=0.01;return[L,C*Math.cos(r),C*Math.sin(r)]}
+
+var cfg,seed,mode='daily',key='medium',C=0,R=0,N=0,colors=[],pos=[],fixed={},sel=-1,moves=0,hints=0,elapsed=0,started=false,solved=false,tk=null,tiles=[];
+
+function build(sd,k){
+  seed=sd;key=k;cfg=SIZES[k];C=cfg.c;R=cfg.r;N=C*R;
+  var rand=rng(sd),h0=rand()*360,hs=[h0,h0+35+rand()*30,h0+75+rand()*30,h0+115+rand()*30].map(function(h){return h%360}).sort(function(){return rand()-.5});
+  var Ls=[0.9,0.74,0.6,0.82].sort(function(){return rand()-.5});
+  var cs=hs.map(function(h,i){return corner(Ls[i],h,rand)});          /* TL, TR, BL, BR */
+  colors=[];
+  for(var y=0;y<R;y++)for(var x=0;x<C;x++){
+    var u=x/(C-1),v=y/(R-1),m=[0,1,2].map(function(j){return(cs[0][j]*(1-u)+cs[1][j]*u)*(1-v)+(cs[2][j]*(1-u)+cs[3][j]*u)*v});
+    colors.push(css(m[0],m[1],m[2]))}
+  fixed={};[0,C-1,N-C,N-1].forEach(function(i){fixed[i]=1});
+  if(cfg.fix==='mids'){var mx=Math.floor(C/2),my=Math.floor(R/2);[mx,N-C+mx,my*C,my*C+C-1].forEach(function(i){fixed[i]=1})}
+  var mov=[];for(var i=0;i<N;i++)if(!fixed[i])mov.push(i);
+  var ids=mov.slice();for(var j=ids.length-1;j>0;j--){var k2=Math.floor(rand()*(j+1)),t=ids[j];ids[j]=ids[k2];ids[k2]=t}
+  for(var p=0;p<ids.length;p++)if(ids[p]===mov[p]){var q=(p+1)%ids.length,tt=ids[p];ids[p]=ids[q];ids[q]=tt}
+  for(var p2=0;p2<ids.length;p2++)if(ids[p2]===mov[p2]){var q2=(p2+1)%ids.length,t2=ids[p2];ids[p2]=ids[q2];ids[q2]=t2}
+  pos=[];for(var i2=0;i2<N;i2++)pos[i2]=i2;mov.forEach(function(p,ix){pos[p]=ids[ix]});
+}
+function inPlace(){var n=0;for(var i=0;i<N;i++)if(pos[i]===i&&!fixed[i])n++;return n}
+function movableCount(){return N-Object.keys(fixed).length}
+function drawBoard(){
+  var b=$('#board');b.style.setProperty('--c',C);b.innerHTML='';tiles=[];
+  for(var i=0;i<N;i++)(function(i){
+    var t=document.createElement('button');t.type='button';t.className='t'+(fixed[i]?' fx':'');t.dataset.i=i;t.tabIndex=i===0?0:-1;
+    t.onclick=function(){tap(i)};t.onkeydown=function(e){keynav(e,i)};
+    b.appendChild(t);tiles.push(t)})(i);
+  paint();
+}
+function paint(){
+  for(var i=0;i<N;i++){var t=tiles[i];t.style.background=colors[pos[i]];t.classList.toggle('sel',i===sel);
+    t.setAttribute('aria-label','Row '+(Math.floor(i/C)+1)+', column '+(i%C+1)+(fixed[i]?', locked':'')+(i===sel?', selected':''))}
+  $('#moves').textContent=moves;$('#inplace').textContent=inPlace()+'/'+movableCount();
+}
+function toast(m,ms){var t=$('#toast');t.textContent=m;t.classList.add('on');clearTimeout(toast.t);toast.t=setTimeout(function(){t.classList.remove('on')},ms||1500)}
+function anim(i,cls){var t=tiles[i];t.classList.remove(cls);void t.offsetWidth;t.classList.add(cls)}
+function startTimer(){if(started)return;started=true;tk=setInterval(function(){if(document.visibilityState==='visible'&&!solved){elapsed++;$('#time').textContent=mmss(elapsed);if(elapsed%10===0)save()}},1000)}
+function tap(i){
+  if(solved)return;
+  if(fixed[i]){anim(i,'shake');toast('That tile is locked');return}
+  startTimer();
+  if(sel<0){sel=i;paint();return}
+  if(sel===i){sel=-1;paint();return}
+  swap(sel,i);sel=-1;
+}
+function swap(a,b){
+  var t=pos[a];pos[a]=pos[b];pos[b]=t;moves++;paint();anim(a,'pop');anim(b,'pop');save();checkWin();
+}
+function checkWin(){for(var i=0;i<N;i++)if(pos[i]!==i)return;win()}
+function keynav(e,i){
+  var d=null;if(e.key==='ArrowRight')d=1;else if(e.key==='ArrowLeft')d=-1;else if(e.key==='ArrowDown')d=C;else if(e.key==='ArrowUp')d=-C;
+  if(d===null)return;e.preventDefault();var j=i+d;if(d===1&&i%C===C-1||d===-1&&i%C===0)return;if(j<0||j>=N)return;
+  tiles[i].tabIndex=-1;tiles[j].tabIndex=0;tiles[j].focus()
+}
+$('#peek').onclick=function(){
+  if(solved)return;var n=0;for(var i=0;i<N;i++)if(!fixed[i]&&pos[i]===i){tiles[i].classList.add('mk');n++}
+  toast(n+' of '+movableCount()+' tiles in place',1600);setTimeout(function(){tiles.forEach(function(t){t.classList.remove('mk')})},1600)
+};
+$('#hint').onclick=function(){
+  if(solved)return;startTimer();var p=-1;for(var i=0;i<N;i++)if(!fixed[i]&&pos[i]!==i){p=i;break}
+  if(p<0)return;var q=pos.indexOf(p);hints++;sel=-1;swap(p,q);toast('Hint used: one tile placed',1600)
+};
+$('#reset').onclick=function(){begin(mode==='daily'?'easy':mode)};
+
+/* ---- win, best scores, sharing ---- */
+function win(){
+  solved=true;clearInterval(tk);tk=null;sel=-1;paint();try{localStorage.removeItem('hue-shift-save')}catch(e){}
+  var all=ls('hue-shift-best')||{},b=all[key],msg;
+  if(!hints){if(!b||moves<b.moves||(moves===b.moves&&elapsed<b.time)){all[key]={moves:moves,time:elapsed};sv('hue-shift-best',all);msg=b?'New best for '+cfg.n+'!':'First '+cfg.n+' score set!'}else msg='Your best on '+cfg.n+': '+b.moves+' moves in '+mmss(b.time)}
+  else msg='Solved with '+hints+' hint'+(hints>1?'s':'')+'. Solve without hints to set a best.';
+  if(mode==='daily'){sv('hue-shift-daily',{date:today,moves:moves,time:elapsed,hints:hints});if(window.HueHub)HueHub.done('shift')}
+  $('#wm').textContent=moves+' moves';$('#wd').textContent='Finished in '+mmss(elapsed);$('#wb').textContent=msg;
+  $('#strip').style.background='linear-gradient(90deg,'+colors[0]+','+colors[C-1]+')';
+  var hn=$('#hubnext');if(window.HueHub&&mode==='daily')HueHub.render(hn,'shift');else hn.hidden=true;
+  $('#next').textContent=mode==='daily'?'Play an Easy puzzle':'Next puzzle';
+  setTimeout(function(){$('#win').hidden=false;$('#next').focus()},650)
+}
+function copy(t){
+  if(navigator.clipboard&&navigator.clipboard.writeText)return navigator.clipboard.writeText(t);
+  return new Promise(function(res,rej){var a=document.createElement('textarea');a.value=t;a.style.position='fixed';a.style.opacity='0';document.body.appendChild(a);a.select();try{document.execCommand('copy')?res():rej()}catch(e){rej(e)}document.body.removeChild(a)})
+}
+$('#share').onclick=function(){
+  var b=this,t='Hue Shift '+(mode==='daily'?'#'+dayNo:cfg.n)+' 🎨\n'+moves+' moves in '+mmss(elapsed)+(hints?' ('+hints+' hint'+(hints>1?'s':'')+')':'')+'\nhttps://huesudoku.com/hue-shift.html';
+  var reset=function(s){b.textContent=s;setTimeout(function(){b.textContent='Share result'},1600)};
+  if(navigator.share&&/Mobi|Android/i.test(navigator.userAgent))navigator.share({text:t}).catch(function(){});
+  else copy(t).then(function(){reset('Copied!')},function(){reset('Copy failed')})
+};
+$('#next').onclick=function(){begin(mode==='daily'?'easy':mode)};
+
+/* ---- start, save and resume ---- */
+function save(){if(solved)return;sv('hue-shift-save',{m:mode,k:key,s:seed,p:pos,mv:moves,t:elapsed,h:hints,d:today})}
+function begin(m,saved){
+  mode=m;clearInterval(tk);tk=null;started=false;solved=false;sel=-1;$('#win').hidden=true;
+  var k=m==='daily'?'medium':m,sd=m==='daily'?hash('hue-shift-'+today):Math.floor(Math.random()*2147483646)+1;
+  if(saved){k=saved.k;sd=saved.s}
+  build(sd,k);moves=0;hints=0;elapsed=0;
+  if(saved&&saved.p&&saved.p.length===N){pos=saved.p.slice();moves=saved.mv||0;hints=saved.h||0;elapsed=saved.t||0}
+  drawBoard();$('#time').textContent=mmss(elapsed);
+  [].forEach.call($('#modes').children,function(x){x.setAttribute('aria-pressed',x.dataset.m===m)});
+  if(saved&&elapsed>0)startTimer();
+}
+MODES.forEach(function(m){var b=document.createElement('button');b.type='button';b.textContent=m[1];b.dataset.m=m[0];b.setAttribute('aria-pressed',false);
+  b.onclick=function(){
+    if(b.getAttribute('aria-pressed')==='true'&&!solved&&moves>0)return;
+    if(m[0]==='daily'){var d=ls('hue-shift-daily');if(d&&d.date===today)toast('Daily already solved in '+d.moves+' moves',2200)}
+    var s=ls('hue-shift-save');begin(m[0],s&&s.m===m[0]&&m[0]==='daily'&&s.d===today?s:null)};
+  $('#modes').appendChild(b)});
+var sv0=ls('hue-shift-save'),dd=ls('hue-shift-daily');
+if(sv0&&SIZES[sv0.k]&&(sv0.m!=='daily'||sv0.d===today))begin(sv0.m,sv0);
+else begin(dd&&dd.date===today?'easy':'daily');
+document.querySelectorAll('ins.adsbygoogle').forEach(function(el){if(el.offsetParent===null)return;try{(window.adsbygoogle=window.adsbygoogle||[]).push({})}catch(e){}});
+})();
+</script><script src="pwa.js" defer></script>
+<!-- Cloudflare Web Analytics --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "937d55df9d664d48a1ad148622c22bda"}'></script><!-- End Cloudflare Web Analytics -->
+</body></html>
