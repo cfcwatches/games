@@ -3,7 +3,7 @@ $tag = @'
 <!-- Cloudflare Web Analytics --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "937d55df9d664d48a1ad148622c22bda"}'></script><!-- End Cloudflare Web Analytics -->
 '@
 $tag = $tag.Trim()
-$pages = 'index.html','sudoku.html','maths-sprint.html','quiz.html','how-to-play.html','strategies.html','naked-pairs.html','pointing-pairs.html','x-wing.html','history-of-sudoku.html','about.html','privacy.html'
+$pages = 'index.html','sudoku.html','maths-sprint.html','quiz.html','kakuro.html','word-guess.html','memory-match.html','hue-shift.html','anagram.html','snake.html','how-to-play.html','strategies.html','naked-pairs.html','pointing-pairs.html','x-wing.html','history-of-sudoku.html','about.html','privacy.html'
 foreach ($f in $pages) {
   if (-not (Test-Path $f)) { Write-Host "MISSING: $f (run this from your games folder)"; continue }
   $c = Get-Content $f -Raw -Encoding UTF8

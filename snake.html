@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Hue Snake – free classic snake game – Hue Sudoku</title>
+<meta name="description" content="Play the classic Snake game free. Steer with the keyboard or a swipe, three speeds, solid or wrap-around walls. No sign-up needed.">
+<script src="consent.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f3effb;--panel:#fff;--ink:#241f3d;--mute:#5e5683;--line:#d6cdee;--accent:#6c4cf1;--ok:#13a05a;--bad:#e5334f;--dl:44%;color-scheme:light}
+@media (prefers-color-scheme:dark){:root{--bg:#0f1127;--panel:#191c3a;--ink:#f1eeff;--mute:#a9a3d2;--line:#2f3466;--accent:#a592ff;--ok:#3ddc8a;--bad:#ff5d77;--dl:68%;color-scheme:dark}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.6 system-ui,sans-serif;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+.wrap{max-width:600px;margin:0 auto;padding:0 16px}
+header{padding:18px 0 6px;display:flex;flex-wrap:wrap;gap:10px 20px;align-items:center;justify-content:space-between}
+.logo{font:800 26px 'Bricolage Grotesque',system-ui,sans-serif;color:var(--ink);text-decoration:none;letter-spacing:-.02em}
+nav a{color:var(--mute);text-decoration:none;font-weight:600;font-size:15px;margin-right:14px}nav a[aria-current]{color:var(--accent)}
+button{font:inherit;color:inherit;cursor:pointer;touch-action:manipulation}
+button:focus-visible,a:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+h1{font:800 clamp(28px,6vw,38px)/1.1 'Bricolage Grotesque',system-ui,sans-serif;letter-spacing:-.02em;margin:14px 0 4px}
+.sub{color:var(--mute);margin:0 0 10px}
+.seg{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
+.seg button{border:1px solid var(--line);background:var(--panel);border-radius:999px;padding:7px 14px;font-weight:600;font-size:15px;color:var(--mute)}
+.seg button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0}
+.stat{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:8px 10px;text-align:center;font-size:13px;color:var(--mute);font-weight:600}
+.stat b{display:block;font:800 24px 'Bricolage Grotesque',system-ui,sans-serif;color:var(--ink);font-variant-numeric:tabular-nums}
+.stage{position:relative;background:var(--panel);border:1px solid var(--line);border-top:6px solid var(--accent);border-radius:22px;padding:14px;box-shadow:0 18px 50px -24px rgba(80,60,200,.5)}
+.toast{position:absolute;left:50%;top:8px;transform:translateX(-50%);background:var(--ink);color:var(--bg);font-weight:800;font-size:15px;border-radius:12px;padding:6px 14px;z-index:6;pointer-events:none;white-space:nowrap;opacity:0;transition:opacity .15s}.toast.on{opacity:1}
+.cover{position:absolute;inset:0;border-radius:inherit;background:color-mix(in srgb,var(--panel) 95%,transparent);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:16px;text-align:center;z-index:5}
+.cover[hidden]{display:none}
+.cover h2{font:800 30px 'Bricolage Grotesque',system-ui,sans-serif;margin:0}.cover p{margin:0;color:var(--mute)}
+.big{font:800 52px 'Bricolage Grotesque',system-ui,sans-serif;color:var(--accent);font-variant-numeric:tabular-nums}
+.btn{background:var(--accent);color:#fff;border:0;border-radius:14px;padding:12px 26px;font-weight:800;font-size:17px;margin:4px}
+.ghost{background:none;border:1px solid var(--line);color:var(--mute);border-radius:12px;padding:10px 16px;font-weight:600;margin:4px}
+.adwrap{text-align:center}.adtop{max-width:728px;margin:6px auto;min-height:50px}.adfoot{max-width:728px;margin:48px auto 20px;min-height:50px}
+article{background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:6px 22px 18px;margin:34px 0 10px}
+article h2{font:800 21px 'Bricolage Grotesque',system-ui,sans-serif;margin:20px 0 4px}
+a{color:var(--accent)}
+footer{text-align:center;color:var(--mute);font-size:14px;padding:6px 0 28px}footer a{font-weight:600;text-decoration:none;margin:0 8px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+:root{--sa:#ece6fb;--sb:#e3dbf7}
+@media (prefers-color-scheme:dark){:root{--sa:#1b1e45;--sb:#22265a}}
+.cv{display:block;width:min(100%,440px);aspect-ratio:1;margin:0 auto;border-radius:14px;touch-action:none;user-select:none;-webkit-user-select:none;background:var(--sa);outline:none}
+.dpad{display:none;grid-template-columns:repeat(3,64px);grid-template-rows:repeat(2,52px);gap:6px;justify-content:center;margin:14px auto 0}
+.dpad button{border:1px solid var(--line);background:var(--panel);border-radius:12px;font-size:22px;color:var(--mute);padding:0}
+.dpad .u{grid-area:1/2}.dpad .l{grid-area:2/1}.dpad .d{grid-area:2/2}.dpad .r{grid-area:2/3}
+@media (pointer:coarse){.dpad{display:grid}}
+.tools{display:flex;justify-content:center;gap:8px;margin-top:12px}
+.tools button{border:1px solid var(--line);background:var(--panel);border-radius:10px;padding:9px 18px;font-weight:600;font-size:14px;color:var(--mute)}
+</style><link rel="icon" href="favicon.ico" sizes="48x48">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="canonical" href="https://huesudoku.com/snake.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Hue Sudoku">
+<meta property="og:title" content="Hue Snake – free classic snake game – Hue Sudoku">
+<meta property="og:description" content="Play the classic Snake game free. Steer with the keyboard or a swipe, three speeds, solid or wrap-around walls.">
+<meta property="og:url" content="https://huesudoku.com/snake.html">
+<meta property="og:image" content="https://huesudoku.com/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="menu.css"><link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#f3effb" media="(prefers-color-scheme: light)"><meta name="theme-color" content="#0f1127" media="(prefers-color-scheme: dark)"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Hue Sudoku"><meta name="apple-mobile-web-app-status-bar-style" content="default"></head><body><div class="wrap">
+<header><a class="logo" href="index.html"><span class="dots" aria-hidden="true"><i style="--h:352"></i><i style="--h:24"></i><i style="--h:45"></i><i style="--h:140"></i><i style="--h:172"></i><i style="--h:200"></i><i style="--h:230"></i><i style="--h:268"></i><i style="--h:312"></i></span>Hue Sudoku</a><nav><a href="index.html">All games</a><a href="sudoku.html">Sudoku</a><a href="kakuro.html">Kakuro</a><a href="maths-sprint.html">Maths</a><a href="quiz.html">Quiz</a><a href="word-guess.html">Word Game</a><a href="memory-match.html">Memory</a><a href="hue-shift.html">Hue Shift</a><a href="anagram.html">Anagram</a><a href="snake.html" aria-current="page">Snake</a></nav></header><script src="menu.js"></script>
+<div class="adwrap adtop"><ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-7925282448688414" data-ad-slot="8192459900" data-ad-format="horizontal" data-full-width-responsive="true"></ins></div>
+<h1>Hue Snake</h1>
+<p class="sub">Eat the dots, grow longer and do not crash. Arrow keys, WASD or swipe to steer.</p>
+<div class="seg" id="speed" role="group" aria-label="Speed"></div>
+<div class="seg" id="walls" role="group" aria-label="Walls"></div>
+<div class="stats"><div class="stat">Score<b id="score">0</b></div><div class="stat">Length<b id="len">3</b></div><div class="stat">Best<b id="best">0</b></div></div>
+<div class="stage" id="stage">
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<canvas class="cv" id="cv" tabindex="0" aria-label="Snake game board. Use the arrow keys or swipe to steer."></canvas>
+<div class="dpad" id="dpad"><button class="u" data-d="u" aria-label="Up">▲</button><button class="l" data-d="l" aria-label="Left">◀</button><button class="d" data-d="d" aria-label="Down">▼</button><button class="r" data-d="r" aria-label="Right">▶</button></div>
+<div class="tools"><button id="pause">Pause</button><button id="restart">New game</button></div>
+<div class="cover" id="cover"><h2 id="ct">Hue Snake</h2><div class="big" id="cb" hidden>0</div><p id="cp">Steer with the arrow keys, WASD or a swipe.</p><p id="cq">&nbsp;</p><div><button class="btn" id="cbtn">Start</button><button class="ghost" id="cshare" hidden>Share score</button></div></div>
+</div>
+<article>
+<h2>How to play Hue Snake</h2>
+<p>Guide the snake around the board to eat the glowing dots. Every dot makes the snake longer and scores 10 points. The game ends if you hit a wall or run into your own tail. Steer with the arrow keys or WASD on a keyboard, by swiping on the board, or with the on-screen arrows on a phone. Press the space bar or the Pause button to take a break.</p>
+<h2>Speed and walls</h2>
+<p>Pick Slow, Normal or Fast. Fast is quick from the start, and every game speeds up a little as your score climbs. Choose <b>Solid walls</b> for the classic game, or <b>Wrap-around</b> to pass straight through one edge and out of the opposite one. Your best score is saved separately for each combination.</p>
+<h2>Tips</h2>
+<ul><li>Keep to the edges early on and leave the middle free to turn around in.</li><li>Plan your turn one move ahead. You can queue two quick turns, so a fast U-turn is possible.</li><li>As the snake grows, move in long, tidy loops rather than zig-zagging.</li><li>In wrap-around mode, remember that the edges are not safe zones. You can come out of the other side right next to your tail.</li></ul>
+<p>Want something calmer? Try <a href="hue-shift.html">Hue Shift</a> or <a href="memory-match.html">Memory Match</a>.</p>
+</article>
+<div class="adwrap adfoot"><ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-7925282448688414" data-ad-slot="5056140614" data-ad-format="auto" data-full-width-responsive="true"></ins></div>
+<footer><a href="index.html">All games</a><a href="sudoku.html">Sudoku</a><a href="how-to-play.html">How to play Sudoku</a><a href="about.html">About</a><a href="privacy.html">Privacy policy</a><br>© 2026 Hue Sudoku. All rights reserved.</footer>
+</div>
+<script>
+
+(function(){
+var $=function(s){return document.querySelector(s)};
+var COLS=20,ROWS=20,SPEEDS={slow:150,normal:110,fast:78},MIN=50;
+var SP=[['slow','Slow'],['normal','Normal'],['fast','Fast']],WL=[['solid','Solid walls'],['wrap','Wrap-around']];
+var speed='normal',walls='solid',state='idle',snake=[],dir={x:1,y:0},queue=[],food={x:0,y:0},score=0,timer=null,hue0=140;
+var cv=$('#cv'),ctx=cv.getContext('2d'),cell=20;
+function ls(k){try{return JSON.parse(localStorage.getItem(k)||'null')}catch(e){return null}}
+function sv(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+function bkey(){return speed+'-'+walls}
+function best(){var b=ls('hue-snake-best')||{};return b[bkey()]||0}
+function css(v){return getComputedStyle(document.documentElement).getPropertyValue(v).trim()}
+function sizeCanvas(){var r=cv.getBoundingClientRect(),d=window.devicePixelRatio||1;cv.width=Math.round(r.width*d);cv.height=Math.round(r.height*d);cell=cv.width/COLS;draw()}
+function rr(x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath()}
+function placeFood(){
+  var taken={};snake.forEach(function(s){taken[s.x+','+s.y]=1});var free=[];
+  for(var y=0;y<ROWS;y++)for(var x=0;x<COLS;x++)if(!taken[x+','+y])free.push({x:x,y:y});
+  if(!free.length)return false;food=free[Math.floor(Math.random()*free.length)];return true;
+}
+function reset(){
+  snake=[{x:10,y:10},{x:9,y:10},{x:8,y:10}];dir={x:1,y:0};queue=[];score=0;hue0=140;placeFood();clearTimeout(timer);
+  state='idle';stats();draw();cover('idle');
+}
+function stats(){$('#score').textContent=score;$('#len').textContent=snake.length;$('#best').textContent=Math.max(best(),score)}
+function draw(){
+  if(!snake.length)return;
+  var w=cv.width;ctx.clearRect(0,0,w,w);var a=css('--sa')||'#ece6fb',b=css('--sb')||'#e3dbf7';
+  for(var y=0;y<ROWS;y++)for(var x=0;x<COLS;x++){ctx.fillStyle=(x+y)%2?b:a;ctx.fillRect(x*cell,y*cell,cell+.5,cell+.5)}
+  var pad=cell*.14;
+  /* food */
+  ctx.fillStyle='hsl(352 85% 58%)';ctx.beginPath();ctx.arc((food.x+.5)*cell,(food.y+.5)*cell,cell*.34,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle='rgba(255,255,255,.55)';ctx.beginPath();ctx.arc((food.x+.38)*cell,(food.y+.36)*cell,cell*.09,0,Math.PI*2);ctx.fill();
+  /* snake, tail to head so the head sits on top */
+  for(var i=snake.length-1;i>=0;i--){
+    var s=snake[i],hue=(hue0+i*9)%360;ctx.fillStyle='hsl('+hue+' 78% '+(i===0?52:58)+'%)';
+    var p=i===0?pad*.6:pad;rr(s.x*cell+p,s.y*cell+p,cell-2*p,cell-2*p,cell*.28);ctx.fill();
+  }
+  var h=snake[0],cx=(h.x+.5)*cell,cy=(h.y+.5)*cell,ex=dir.x*cell*.14,ey=dir.y*cell*.14,px=-dir.y*cell*.17,py=dir.x*cell*.17;
+  ctx.fillStyle='#fff';[1,-1].forEach(function(sg){ctx.beginPath();ctx.arc(cx+ex+px*sg,cy+ey+py*sg,cell*.11,0,Math.PI*2);ctx.fill()});
+  ctx.fillStyle='#241f3d';[1,-1].forEach(function(sg){ctx.beginPath();ctx.arc(cx+ex*1.5+px*sg,cy+ey*1.5+py*sg,cell*.05,0,Math.PI*2);ctx.fill()});
+}
+function delay(){return Math.max(MIN,SPEEDS[speed]-Math.floor(score/50)*4)}
+function schedule(){clearTimeout(timer);timer=setTimeout(step,delay())}
+function step(){
+  if(state!=='play')return;
+  if(queue.length)dir=queue.shift();
+  var hd=snake[0],nx=hd.x+dir.x,ny=hd.y+dir.y;
+  if(walls==='wrap'){nx=(nx+COLS)%COLS;ny=(ny+ROWS)%ROWS}
+  else if(nx<0||ny<0||nx>=COLS||ny>=ROWS)return over();
+  var eat=nx===food.x&&ny===food.y,body=eat?snake:snake.slice(0,-1);
+  for(var i=0;i<body.length;i++)if(body[i].x===nx&&body[i].y===ny)return over();
+  snake.unshift({x:nx,y:ny});
+  if(eat){score+=10;hue0=(hue0+6)%360;if(!placeFood()){draw();stats();return over(true)}}else snake.pop();
+  draw();stats();schedule();
+}
+function turn(dx,dy){
+  if(state==='over')return;
+  if(state==='pause'){resume()}
+  var lastD=queue.length?queue[queue.length-1]:dir;
+  if(lastD.x===dx&&lastD.y===dy)return;
+  if(lastD.x===-dx&&lastD.y===-dy)return;
+  if(queue.length<2)queue.push({x:dx,y:dy});
+  if(state==='idle')begin();
+}
+function begin(){if(state==='play')return;state='play';$('#cover').hidden=true;$('#pause').textContent='Pause';cv.focus({preventScroll:true});schedule()}
+function pause(){if(state!=='play')return;state='pause';clearTimeout(timer);cover('pause')}
+function resume(){if(state!=='pause')return;state='play';$('#cover').hidden=true;schedule()}
+function over(perfect){
+  state='over';clearTimeout(timer);
+  var b=ls('hue-snake-best')||{},prev=b[bkey()]||0,msg;
+  if(score>prev){b[bkey()]=score;sv('hue-snake-best',b);msg=score>0?'New best for this setting!':''}else msg='Best: '+prev;
+  stats();cover('over',perfect,msg);
+}
+function cover(kind,perfect,msg){
+  var c=$('#cover');c.hidden=false;
+  $('#cb').hidden=kind!=='over';$('#cshare').hidden=kind!=='over';
+  if(kind==='idle'){$('#ct').textContent='Hue Snake';$('#cp').textContent='Steer with the arrow keys, WASD or a swipe.';$('#cq').textContent=best()?'Best on this setting: '+best():'Eat the dots. Do not hit the walls or yourself.';$('#cbtn').textContent='Start'}
+  if(kind==='pause'){$('#ct').textContent='Paused';$('#cp').textContent='Press space or tap Resume.';$('#cq').innerHTML='&nbsp;';$('#cbtn').textContent='Resume'}
+  if(kind==='over'){$('#ct').textContent=perfect?'Perfect board!':'Game over';$('#cb').textContent=score;$('#cp').textContent='Length '+snake.length+' · '+(SP.filter(function(s){return s[0]===speed})[0][1])+', '+(walls==='wrap'?'wrap-around':'solid walls');$('#cq').textContent=msg||'';$('#cbtn').textContent='Play again'}
+  $('#cbtn').focus({preventScroll:true});
+}
+$('#cbtn').onclick=function(){if(state==='pause')resume();else{reset();begin()}};
+$('#restart').onclick=function(){reset()};
+$('#pause').onclick=function(){if(state==='play')pause();else if(state==='pause')resume()};
+$('#cshare').onclick=function(){
+  var b=this,t='Hue Snake 🐍 '+score+' points\n'+(SP.filter(function(s){return s[0]===speed})[0][1])+', '+(walls==='wrap'?'wrap-around':'solid walls')+'\nhttps://huesudoku.com/snake.html';
+  var rs=function(s){b.textContent=s;setTimeout(function(){b.textContent='Share score'},1600)};
+  if(navigator.share&&/Mobi|Android/i.test(navigator.userAgent))navigator.share({text:t}).catch(function(){});
+  else if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(t).then(function(){rs('Copied!')},function(){rs('Copy failed')});
+  else rs('Copy failed')
+};
+var KEYS={ArrowUp:[0,-1],ArrowDown:[0,1],ArrowLeft:[-1,0],ArrowRight:[1,0],w:[0,-1],s:[0,1],a:[-1,0],d:[1,0],W:[0,-1],S:[0,1],A:[-1,0],D:[1,0]};
+document.addEventListener('keydown',function(e){
+  if(e.ctrlKey||e.metaKey||e.altKey)return;
+  var k=e.key,m=KEYS[k];
+  if(m){if(state!=='over'){e.preventDefault();turn(m[0],m[1])}return}
+  if(k===' '||k==='p'||k==='P'){
+    if(state==='play'){e.preventDefault();pause()}
+    else if(state==='pause'){e.preventDefault();resume()}
+    else if(state==='idle'&&document.activeElement===cv){e.preventDefault();begin()}
+  }
+  else if(k==='Enter'&&state==='over'&&document.activeElement===cv){reset();begin()}
+});
+/* swipe */
+var tx=0,ty=0,tracking=false;
+cv.addEventListener('touchstart',function(e){var t=e.touches[0];tx=t.clientX;ty=t.clientY;tracking=true},{passive:true});
+cv.addEventListener('touchmove',function(e){
+  if(!tracking)return;e.preventDefault();var t=e.touches[0],dx=t.clientX-tx,dy=t.clientY-ty;
+  if(Math.max(Math.abs(dx),Math.abs(dy))<18)return;
+  if(Math.abs(dx)>Math.abs(dy))turn(dx>0?1:-1,0);else turn(0,dy>0?1:-1);
+  tx=t.clientX;ty=t.clientY;
+},{passive:false});
+cv.addEventListener('touchend',function(){tracking=false});
+[].forEach.call(document.querySelectorAll('#dpad button'),function(b){
+  b.addEventListener('pointerdown',function(e){e.preventDefault();var d=b.dataset.d;turn(d==='l'?-1:d==='r'?1:0,d==='u'?-1:d==='d'?1:0)});
+});
+document.addEventListener('visibilitychange',function(){if(document.visibilityState==='hidden')pause()});
+function seg(id,list,get,set){var el=$(id);el.innerHTML='';list.forEach(function(x){var b=document.createElement('button');b.type='button';b.textContent=x[1];b.setAttribute('aria-pressed',get()===x[0]);b.onclick=function(){set(x[0]);[].forEach.call(el.children,function(c){c.setAttribute('aria-pressed',c===b)});reset()};el.appendChild(b)})}
+seg('#speed',SP,function(){return speed},function(v){speed=v});
+seg('#walls',WL,function(){return walls},function(v){walls=v});
+window.addEventListener('resize',sizeCanvas);
+if(window.matchMedia)matchMedia('(prefers-color-scheme: dark)').addEventListener&&matchMedia('(prefers-color-scheme: dark)').addEventListener('change',draw);
+window.__hueSnake={state:function(){return{state:state,score:score,len:snake.length,head:snake[0],dir:dir,food:food}},setFood:function(x,y){food={x:x,y:y};draw()}};
+sizeCanvas();reset();
+})();
+
+document.querySelectorAll('ins.adsbygoogle').forEach(function(el){if(el.offsetParent===null)return;try{(window.adsbygoogle=window.adsbygoogle||[]).push({})}catch(e){}});
+</script><script src="pwa.js" defer></script>
+<!-- Cloudflare Web Analytics --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "937d55df9d664d48a1ad148622c22bda"}'></script><!-- End Cloudflare Web Analytics -->
+</body></html>
