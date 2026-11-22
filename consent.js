@@ -1,14 +1,13 @@
 /* Hue Sudoku consent manager.
-   - Google's ad script (AdSense) is NOT loaded until the visitor presses Accept.
-   - Reject = no ads script at all, and the empty ad slots are hidden.
-   - The choice is stored in this browser (localStorage 'hue-consent'); a "Cookie settings" link in the footer reopens it.
-   - Game progress, streaks and preferences are stored locally for the game to work and do not need consent.
-
-   IMPORTANT: for visitors in the UK / EEA, Google requires ads to be served with a Google-certified consent
-   platform. If you switch on Google's free "Privacy & messaging" consent message in your AdSense account,
-   set USE_GOOGLE_CMP to true below. This banner then stands down and ads load as normal, so visitors don't see two banners. */
+   MODE 1 (current): USE_GOOGLE_CMP = true. Every page has the standard AdSense tag in its <head>, and consent is handled by Google's own
+   certified consent message (switch it on in AdSense > Privacy & messaging). This script then does nothing.
+   MODE 2: USE_GOOGLE_CMP = false uses the built-in banner below instead, which holds back Google's ad script until the visitor presses
+   Accept. If you go back to this mode you MUST also delete the static <script async src="...adsbygoogle.js..."> tag from every page, otherwise
+   it loads ads straight away and the banner is pointless.
+   (Mode 2 notes) Reject = no ads script at all. The choice is stored in localStorage 'hue-consent'; a "Cookie settings" link in the footer reopens it.
+   Game progress, streaks and preferences are stored locally for the game to work and do not need consent. */
 (function(){
-  var USE_GOOGLE_CMP=false;
+  var USE_GOOGLE_CMP=true;
   var CLIENT='ca-pub-7925282448688414',KEY='hue-consent',root=document.documentElement;
 
   function read(){try{return JSON.parse(localStorage.getItem(KEY)||'null')}catch(e){return null}}
@@ -31,7 +30,7 @@
   }
 
   var st=read();
-  if(USE_GOOGLE_CMP){loadAds();return}
+  if(USE_GOOGLE_CMP)return;   /* the AdSense tag in each page's <head> loads the ads; Google's consent message handles consent */
   if(st&&st.ads===true)loadAds();else root.classList.add('noads');
 
   /* ---------- banner ---------- */

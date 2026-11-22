@@ -1,6 +1,6 @@
 /* Hue Sudoku service worker: lets the site install as an app and play offline.
    Bump VERSION whenever you add or rename files in PRECACHE. */
-var VERSION='hue-v4';
+var VERSION='hue-v5';
 var RUNTIME='hue-fonts-v1';
 var PRECACHE=['/','/index.html','/sudoku.html','/kakuro.html','/word-guess.html','/memory-match.html','/hue-shift.html','/anagram.html','/snake.html','/maths-sprint.html','/quiz.html',
   '/games.html','/how-to-play.html','/strategies.html','/naked-pairs.html','/pointing-pairs.html','/x-wing.html','/history-of-sudoku.html','/about.html','/privacy.html','/404.html',
